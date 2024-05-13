@@ -1,4 +1,6 @@
-﻿namespace Core.Network
+﻿using Core.Utils;
+
+namespace Core.Security
 {
     public class SessionKeys
     {
@@ -18,8 +20,10 @@
 
         public static SessionKeys GenerateSessionKeys()
         {
-            var rand = new Random();
-            return new SessionKeys(rand.Next(2, Int32.MaxValue), rand.Next(3, Int32.MaxValue), rand.Next(4, int.MaxValue), rand.Next(5, Int32.MaxValue));
+            return new SessionKeys(333
+                , 555
+                , 666
+                , 777);
         }
 
         public static SessionKeys GetEmptyKeys()

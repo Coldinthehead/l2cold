@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Network
+﻿namespace Core.Security.Crypt
 {
     public class BlowfishCipher
     {
@@ -41,7 +35,7 @@ namespace Core.Network
         public static bool verifyChecksum(byte[] raw, int offset, int size)
         {
             // check if size is multiple of 4 and if there is more then only the checksum
-            if (((size & 3) != 0) || (size <= 4))
+            if ((size & 3) != 0 || size <= 4)
             {
                 return false;
             }
@@ -54,17 +48,17 @@ namespace Core.Network
             for (i = offset; i < count; i += 4)
             {
                 check = raw[i] & 0xff;
-                check |= (raw[i + 1] << 8) & 0xff00;
-                check |= (raw[i + 2] << 0x10) & 0xff0000;
-                check |= (raw[i + 3] << 0x18) & 0xff000000;
+                check |= raw[i + 1] << 8 & 0xff00;
+                check |= raw[i + 2] << 0x10 & 0xff0000;
+                check |= raw[i + 3] << 0x18 & 0xff000000;
 
                 chksum ^= check;
             }
 
             check = raw[i] & 0xff;
-            check |= (raw[i + 1] << 8) & 0xff00;
-            check |= (raw[i + 2] << 0x10) & 0xff0000;
-            check |= (raw[i + 3] << 0x18) & 0xff000000;
+            check |= raw[i + 1] << 8 & 0xff00;
+            check |= raw[i + 2] << 0x10 & 0xff0000;
+            check |= raw[i + 3] << 0x18 & 0xff000000;
 
             return check == chksum;
         }
@@ -94,22 +88,22 @@ namespace Core.Network
             for (i = offset; i < count; i += 4)
             {
                 ecx = raw[i] & 0xff;
-                ecx |= (raw[i + 1] << 8) & 0xff00;
-                ecx |= (raw[i + 2] << 0x10) & 0xff0000;
-                ecx |= (raw[i + 3] << 0x18) & 0xff000000;
+                ecx |= raw[i + 1] << 8 & 0xff00;
+                ecx |= raw[i + 2] << 0x10 & 0xff0000;
+                ecx |= raw[i + 3] << 0x18 & 0xff000000;
 
                 chksum ^= ecx;
             }
 
             ecx = raw[i] & 0xff;
-            ecx |= (raw[i + 1] << 8) & 0xff00;
-            ecx |= (raw[i + 2] << 0x10) & 0xff0000;
-            ecx |= (raw[i + 3] << 0x18) & 0xff000000;
+            ecx |= raw[i + 1] << 8 & 0xff00;
+            ecx |= raw[i + 2] << 0x10 & 0xff0000;
+            ecx |= raw[i + 3] << 0x18 & 0xff000000;
 
             raw[i] = (byte)(chksum & 0xff);
-            raw[i + 1] = (byte)((chksum >> 0x08) & 0xff);
-            raw[i + 2] = (byte)((chksum >> 0x10) & 0xff);
-            raw[i + 3] = (byte)((chksum >> 0x18) & 0xff);
+            raw[i + 1] = (byte)(chksum >> 0x08 & 0xff);
+            raw[i + 2] = (byte)(chksum >> 0x10 & 0xff);
+            raw[i + 3] = (byte)(chksum >> 0x18 & 0xff);
         }
 
         /**
@@ -150,15 +144,15 @@ namespace Core.Network
                 edx ^= ecx;
 
                 raw[pos++] = (byte)(edx & 0xFF);
-                raw[pos++] = (byte)((edx >> 8) & 0xFF);
-                raw[pos++] = (byte)((edx >> 16) & 0xFF);
-                raw[pos++] = (byte)((edx >> 24) & 0xFF);
+                raw[pos++] = (byte)(edx >> 8 & 0xFF);
+                raw[pos++] = (byte)(edx >> 16 & 0xFF);
+                raw[pos++] = (byte)(edx >> 24 & 0xFF);
             }
 
             raw[pos++] = (byte)(ecx & 0xFF);
-            raw[pos++] = (byte)((ecx >> 8) & 0xFF);
-            raw[pos++] = (byte)((ecx >> 16) & 0xFF);
-            raw[pos++] = (byte)((ecx >> 24) & 0xFF);
+            raw[pos++] = (byte)(ecx >> 8 & 0xFF);
+            raw[pos++] = (byte)(ecx >> 16 & 0xFF);
+            raw[pos++] = (byte)(ecx >> 24 & 0xFF);
         }
 
         /**
@@ -172,7 +166,7 @@ namespace Core.Network
          */
         public void decrypt(byte[] raw, int offset, int size)
         {
-            for (int i = offset; i < (offset + size); i += 8)
+            for (int i = offset; i < offset + size; i += 8)
             {
                 _cipher.decryptBlock(raw, i);
             }
@@ -188,7 +182,7 @@ namespace Core.Network
          */
         public void crypt(byte[] raw, int offset, int size)
         {
-            for (int i = offset; i < (offset + size); i += 8)
+            for (int i = offset; i < offset + size; i += 8)
             {
                 _cipher.encryptBlock(raw, i);
             }
@@ -1285,7 +1279,7 @@ namespace Core.Network
             setKey(workingKey);
         }
 
-        public String getAlgorithmName()
+        public string getAlgorithmName()
         {
             return "Blowfish";
         }
@@ -1297,7 +1291,7 @@ namespace Core.Network
 
         private int func(int x)
         {
-            return (((S0[(x >>> 24)] + S1[(x >>> 16) & 0xff]) ^ S2[(x >>> 8) & 0xff]) + S3[x & 0xff]);
+            return (S0[x >>> 24] + S1[(x >>> 16) & 0xff] ^ S2[(x >>> 8) & 0xff]) + S3[x & 0xff];
         }
 
         /**
@@ -1361,7 +1355,7 @@ namespace Core.Network
                 for (int j = 0; j < 4; j++)
                 {
                     // create a 32 bit block
-                    data = (data << 8) | (key[keyIndex++] & 0xff);
+                    data = data << 8 | key[keyIndex++] & 0xff;
                     // wrap when we get to the end of the key
                     if (keyIndex >= keyLength)
                     {
@@ -1399,7 +1393,7 @@ namespace Core.Network
             {
                 throw new Exception("Blowfish not initialized");
             }
-            if ((srcIndex + BLOCK_SIZE) > src.Length)
+            if (srcIndex + BLOCK_SIZE > src.Length)
             {
                 throw new IOException("input buffer too short");
             }
@@ -1422,11 +1416,11 @@ namespace Core.Network
             {
                 throw new Exception("Blowfish not initialized");
             }
-            if ((srcIndex + BLOCK_SIZE) > src.Length)
+            if (srcIndex + BLOCK_SIZE > src.Length)
             {
                 throw new IOException("input buffer too short");
             }
-            if ((dstIndex + BLOCK_SIZE) > dst.Length)
+            if (dstIndex + BLOCK_SIZE > dst.Length)
             {
                 throw new IOException("output buffer too short");
             }
@@ -1506,7 +1500,7 @@ namespace Core.Network
             {
                 throw new Exception("Blowfish not initialized");
             }
-            if ((srcIndex + BLOCK_SIZE) > src.Length)
+            if (srcIndex + BLOCK_SIZE > src.Length)
             {
                 throw new IOException("input buffer too short");
             }
@@ -1529,11 +1523,11 @@ namespace Core.Network
             {
                 throw new Exception("Blowfish not initialized");
             }
-            if ((srcIndex + BLOCK_SIZE) > src.Length)
+            if (srcIndex + BLOCK_SIZE > src.Length)
             {
                 throw new IOException("input buffer too short");
             }
-            if ((dstIndex + BLOCK_SIZE) > src.Length)
+            if (dstIndex + BLOCK_SIZE > src.Length)
             {
                 throw new IOException("output buffer too short");
             }
@@ -1610,7 +1604,7 @@ namespace Core.Network
          */
         private int bytesTo32bits(byte[] src, int srcIndex)
         {
-            return ((src[srcIndex + 3] & 0xff) << 24) | ((src[srcIndex + 2] & 0xff) << 16) | ((src[srcIndex + 1] & 0xff) << 8) | (src[srcIndex] & 0xff);
+            return (src[srcIndex + 3] & 0xff) << 24 | (src[srcIndex + 2] & 0xff) << 16 | (src[srcIndex + 1] & 0xff) << 8 | src[srcIndex] & 0xff;
         }
 
         /**

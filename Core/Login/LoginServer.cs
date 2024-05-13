@@ -1,8 +1,9 @@
 ﻿using Core.Logs;
+using Core.Security.Crypt;
 using System.Net.Sockets;
 
 
-namespace Core.Network
+namespace Core.Login
 {
     public class LoginServer
     {
@@ -40,7 +41,6 @@ namespace Core.Network
             }
             ReadCurrentClients();
             RemoveIdleClients();
-            Thread.Sleep(100);
         }
 
         private void ConnectClient(TcpClient client)

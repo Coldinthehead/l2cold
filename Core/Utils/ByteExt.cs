@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace Core.Utils
 {
     public static class ByteExt
     {
@@ -14,7 +14,7 @@
         public static byte[] Slice(this byte[] arr, int start, int end)
         {
             byte[] res = new byte[end - start];
-            for (int i = start, j = 0; i< end; i++, j++)
+            for (int i = start, j = 0; i < end; i++, j++)
             {
                 res[j] = arr[i];
             }

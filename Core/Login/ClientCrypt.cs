@@ -1,12 +1,11 @@
-﻿using Core.Network;
+﻿using Core.Security.Crypt;
+using Core.Utils;
 using Org.BouncyCastle.Crypto.Engines;
 
-namespace Core
+namespace Core.Login
 {
     public class ClientCrypt
     {
-        private readonly Random rand = new Random();
-
         public int SessionId => _sessionId;
         public byte[] blowfishKey;
         public BlowfishCipher cipher;
@@ -15,7 +14,7 @@ namespace Core
         private int _sessionId;
         public ClientCrypt(ScrambledKeyPair pair)
         {
-            blowfishKey = Program.GenerateBytes(16);
+            blowfishKey = ServerRandom.NextBytes(16);
             cipher = new BlowfishCipher(blowfishKey);
             _sessionId = 0;
             RsaKeyPair = pair;
@@ -28,7 +27,7 @@ namespace Core
 
         public void GenerateSessionId()
         {
-            _sessionId = rand.Next(50, 250) * rand.Next(25, 255) * rand.Next(1, 13) + rand.Next(100000, 10000000);
+            _sessionId = ServerRandom.Next(50, 250) * ServerRandom.Next(25, 255) * ServerRandom.Next(1, 13) + ServerRandom.Next(100000, 10000000);
         }
 
         public byte[] DecryptBlockRSA(byte[] data)
@@ -37,7 +36,6 @@ namespace Core
             rsaEngine.Init(false, RsaKeyPair._privateKey);
             var res = rsaEngine.ProcessBlock(data, 0, data.Length);
             return res;
-
         }
     }
 }

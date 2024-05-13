@@ -1,15 +1,14 @@
-﻿using System;
-using Org.BouncyCastle.Crypto;
+﻿using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
-namespace Core.Network
+namespace Core.Security.Crypt
 {
     public class ScrambledKeyPair
     {
-        public AsymmetricCipherKeyPair Pair=> _pair;
+        public AsymmetricCipherKeyPair Pair => _pair;
         private AsymmetricCipherKeyPair _pair;
 
         private AsymmetricKeyParameter _publicKey;
@@ -21,7 +20,7 @@ namespace Core.Network
         public ScrambledKeyPair(AsymmetricCipherKeyPair pPair)
         {
             _pair = pPair;
-            _publicKey = /*pPair.getPublic();*/pPair.Public;
+            _publicKey = pPair.Public;
             _scrambledModulus = scrambleModulus((_publicKey as RsaKeyParameters).Modulus);
             _privateKey = pPair.Private;
         }
@@ -47,7 +46,7 @@ namespace Core.Network
             if (array.Length == 129 && array[0] == 0)
             {
                 byte[] array2 = new byte[128];
-                Array.Copy((global::System.Array)array, 1, (global::System.Array)array2, 0, 128);
+                Array.Copy(array, 1, array2, 0, 128);
                 array = array2;
             }
 

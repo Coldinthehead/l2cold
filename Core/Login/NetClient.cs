@@ -1,7 +1,9 @@
 ﻿using System.Net.Sockets;
+using Core.Security;
+using Core.Utils.NetworkBuffers;
 
 
-namespace Core.Network
+namespace Core.Login
 {
     public class NetClient
     {

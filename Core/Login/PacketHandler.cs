@@ -1,7 +1,10 @@
 ﻿using Core.Logs;
+using Core.Security;
+using Core.Utils;
+using Core.Utils.NetworkBuffers;
 using System.Text;
 
-namespace Core.Network
+namespace Core.Login
 {
 
     enum AuthenticationResult
