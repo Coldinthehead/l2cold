@@ -30,5 +30,10 @@ namespace Core.Security
         {
             return new SessionKeys(1, 2, 3, 4);
         }
+
+        public static SessionKeys FromValues(int a, int b, int c, int d)
+        {
+            return new SessionKeys(a, b, c, d);
+        }
     }
 }

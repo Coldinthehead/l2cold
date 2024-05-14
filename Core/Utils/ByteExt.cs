@@ -25,5 +25,14 @@
         {
             return arr.Slice(start, arr.Length);
         }
+
+        public static string ToHex(this byte val)
+        {
+            return $"0x{val.ToString("X2")}";
+        }
+        public static string ToHex(this int val)
+        {
+            return $"0x{val.ToString("X2")}";
+        }
     }
 }

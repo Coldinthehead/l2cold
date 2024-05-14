@@ -16,7 +16,7 @@ namespace Core.Utils.NetworkBuffers
 
         public int ReadByte()
         {
-            return (sbyte)_buffer[_position++];
+            return _buffer[_position++];
         }
 
         public int ReadInt()
@@ -49,7 +49,6 @@ namespace Core.Utils.NetworkBuffers
             {
                 sb.Append((char)charId);
             }
-            Console.WriteLine(sb.ToString());
             return sb.ToString();
         }
     }

@@ -25,7 +25,7 @@ namespace Core.Login
         public void SendInit()
         {
             _crypt.GenerateSessionId();
-            WriteableBuffer buffer = new WriteableBuffer(32);
+            WriteableBuffer buffer = new WriteableBuffer();
             buffer.WriteByte(0x00)
                 .WriteInt(_crypt.SessionId)
                 .WriteInt(0x0000c621)

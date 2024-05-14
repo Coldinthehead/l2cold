@@ -49,7 +49,6 @@ namespace Core.Login
 
                         byte[] id = ExtractId(dec);
                         byte[] pw = ExtractPw(dec);
-                        dec.ToConsole();
                         _logger.Log($"id : {ASCIIEncoding.ASCII.GetString(id)}");
                         _logger.Log($"pw : {ASCIIEncoding.ASCII.GetString(pw)}");
 
@@ -110,7 +109,7 @@ namespace Core.Login
                     break;
                 default:
                     {
-                        _logger.Log($"Unknown opcode [{opCode}] from : <{client}>");
+                        _logger.Log($"Unknown opcode [{opCode.ToHex()}] from :", client);
                     }
                     break;
             }

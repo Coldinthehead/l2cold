@@ -45,7 +45,7 @@ namespace Core.Game.Network
             }
 
             // Shift key.
-            int old = _inKey[8] & 0xff;
+            int old = _inKey[8] ;
             old |= (_inKey[9] << 8);
             old |= (_inKey[10] << 16);
             old |= (_inKey[11] << 24);
@@ -67,18 +67,16 @@ namespace Core.Game.Network
             }
 
             // Shift key.
-            int old = _outKey[8] & 0xff;
-            old |= (_outKey[9] << 8) & 0xff00;
-            old |= (_outKey[10] << 16) & 0xff0000;
-            old |= (_outKey[11] << 24) & 0xff0000;
+            int old = _outKey[8] ;
+            old |= (_outKey[9] << 8) ;
+            old |= (_outKey[10] << 16) ;
+            old |= (_outKey[11] << 24);
             old += size;
-            _outKey[8] = (byte)(old & 0xff);
-            _outKey[9] = (byte)((old >> 8) & 0xff);
-            _outKey[10] = (byte)((old >> 16) & 0xff);
-            _outKey[11] = (byte)((old >> 24) & 0xff);
+            _outKey[8] = (byte)(old );
+            _outKey[9] = (byte)((old >> 8) );
+            _outKey[10] = (byte)((old >> 16) );
+            _outKey[11] = (byte)((old >> 24) );
         }
-
-
     }
 
     public class NoCrypter : IDataCrypter

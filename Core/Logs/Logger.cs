@@ -14,5 +14,10 @@
         {
             Console.WriteLine($"[{_name}] {msg}");
         }
+
+        public void Log<V>(string msg, V payload)
+        {
+            Console.WriteLine($"[{_name}] {msg} <{payload}>");
+        }
     }
 }

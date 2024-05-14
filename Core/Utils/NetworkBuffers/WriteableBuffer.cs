@@ -1,26 +1,18 @@
-﻿namespace Core.Utils.NetworkBuffers
+﻿
+
+namespace Core.Utils.NetworkBuffers
 {
 
     internal class WriteableBuffer
     {
         private List<byte> _data;
 
-        public WriteableBuffer(int size)
-        {
-            _data = new List<byte>(2 + size)
-            {
-                0,0, // 
-            };
-        }
-
         public WriteableBuffer()
         {
-            _data = new List<byte>(32)
-            {
-                0,0, // 
-            };
+            _data = new List<byte>();
         }
 
+ 
         private void WriteRaw(byte b)
         {
             _data.Add(b);
@@ -55,13 +47,13 @@
 
         public byte[] toByteArray()
         {
-            byte[] arr = new byte[_data.Count];
-            var len = _data.Count;
+            byte[] arr = new byte[_data.Count + 2];
+            var len = _data.Count + 2;
             arr[0] = (byte)len;
             arr[1] = (byte)(len >> 8);
-            for (int i = 2; i < _data.Count; i++)
+            for (int i = 0; i < _data.Count; i++)
             {
-                arr[i] = _data[i];
+                arr[2+i] = _data[i];
             }
             return arr;
         }
@@ -80,6 +72,35 @@
             WriteRaw((byte)value);
             WriteRaw((byte)(value >> 8));
 
+            return this;
+        }
+
+        public WriteableBuffer WriteString(string str)
+        {
+            var data = System.Text.Encoding.Unicode.GetBytes(str);
+            WriteBytes(data);
+            WriteShort(0);
+            return this;
+        }
+
+        public WriteableBuffer WriteLong(long value)
+        {
+            WriteRaw((byte)value);
+            WriteRaw((byte)(value >> 8));
+            WriteRaw((byte)(value >> 16));
+            WriteRaw((byte)(value >> 24));
+            WriteRaw((byte)(value >> 32));
+            WriteRaw((byte)(value >> 40));
+            WriteRaw((byte)(value >> 48));
+            WriteRaw((byte)(value >> 56));
+            return this;
+        }
+
+        public WriteableBuffer WriteDouble(double value)
+        {
+            var data = BitConverter.GetBytes(value);
+            var d1 = BitConverter.ToInt64(data);
+            WriteLong(d1);
             return this;
         }
     }
