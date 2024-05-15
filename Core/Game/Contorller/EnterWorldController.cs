@@ -3,17 +3,25 @@ using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Logs;
 using Core.Utils.NetworkBuffers;
+using Core.Math;
 
 namespace Core.Game.Contorller
 {
     public class EnterWorldController : IPacketController
     {
         private static Logger<EnterWorldController> _logger = Logger<EnterWorldController>.BuildLogger();
+        private readonly ActivePlayers _players;
+
+        public EnterWorldController(ActivePlayers players)
+        {
+            _players = players;
+        }
 
         public void Run(GameClient client, ReadableBuffer message)
         {
             _logger.Log($"[ENTER_WORLD] received from :", client);
-            client.SendData(BuildMockUserInfo(client));
+            var character = GameCharacter.BuildMockCharacter();
+            client.SendData(BuildMockUserInfo(client, character));
             client.SendData(BuildChangeMoveType());
             client.SendData(BuildQuestList());
             client.SendData(BuildMagicIconEffects());
@@ -29,7 +37,7 @@ namespace Core.Game.Contorller
             client.SendData(BuildTargetSelected());
             client.SendData(BuildSetCompasZone());
             client.SendData(BuildActionFailed());
-
+            _players.AddPlayer(client, new Player(character.Info.ObjectId, new Vec2((float)character.x, (float)character.y)));
         }
 
         private static byte[] BuildMagicIconEffects()
@@ -145,10 +153,10 @@ namespace Core.Game.Contorller
             return packet.toByteArray();
         }
 
-        private static byte[] BuildMockUserInfo(GameClient client)
+        private static byte[] BuildMockUserInfo(GameClient client, GameCharacter character)
         {
             var packet = new WriteableBuffer();
-            var character = GameCharacter.BuildMockCharacter();
+
             var info = character.Info;
             var stats = character.Stats;
             packet.WriteByte(OutPacket.USER_INFO)

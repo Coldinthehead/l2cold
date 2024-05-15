@@ -17,6 +17,8 @@ namespace Core.Game
         private List<GameClient> _activeClients = new();
         private List<GameClient> _toRemove = new();
 
+        private readonly ActivePlayers _worldPlayers = new();
+
         public GameServer(TcpListener tcpListener, LoginServerService loginServer)
         {
             _connectionListener = tcpListener;
@@ -38,6 +40,7 @@ namespace Core.Game
             ConnectPendingClients();
             ReadActiveClients();
             RemoveInactiveClients();
+            _worldPlayers.UpdatePlayers();
         }
 
         private void ConnectPendingClients()
@@ -101,8 +104,10 @@ namespace Core.Game
                         _logger.Log($"[EX_PACKET] received from :", client);
                     break;
                 case InPacket.ENTER_WORLD:
-                        new EnterWorldController().Run(client, buffer);
-                    
+                        new EnterWorldController(_worldPlayers).Run(client, buffer);
+                    break;
+                case InPacket.CHARACTER_MOVE_TO_LOCATION:
+                        new CharMoveController(_worldPlayers).Run(client, buffer);
                     break;
                 default:
                         _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");
