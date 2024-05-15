@@ -1,7 +1,7 @@
 ﻿using Core.Security;
 using Core.Security.Crypt;
 using Core.Utils;
-using Org.BouncyCastle.Bcpg;
+using Core.Utils.NetworkBuffers;
 using System.Net.Sockets;
 
 namespace Core.Game.Network
@@ -11,7 +11,7 @@ namespace Core.Game.Network
     {
         private readonly TcpClient _connection;
         private IDataCrypter _cryptInterface;
-        public SessionKeys Skeys { get => _sKeys; set => _sKeys = value; }
+        public SessionKeys Skeys => _sKeys;
 
         private SessionKeys _sKeys;
         private ReadQue _inQue;
@@ -29,6 +29,11 @@ namespace Core.Game.Network
             _cryptInterface = cryptInterface;
         }
 
+        public void SetSessionKeys(SessionKeys keys)
+        {
+            _sKeys = keys;
+        }
+
         internal void ForceDisonnect()
         {
             _connection.Close();
@@ -39,11 +44,11 @@ namespace Core.Game.Network
             return _inQue.TryRead();
         }
 
-        public byte[] ReceiveRawData()
+        public ReadableBuffer ReceiveRawData()
         {
             var data = _inQue.GetPacket();
             _cryptInterface.DecryptInPlace(data, 2, data.Length-2);
-            return data;
+            return new ReadableBuffer(data.Slice(2));
         }
 
         public void SendData(byte[] data)

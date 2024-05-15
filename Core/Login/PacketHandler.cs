@@ -138,6 +138,8 @@ namespace Core.Login
                 Brackets = false;
                 Status = 1;
                 ID = id;
+                IsPvp = true;
+                ServerType = 1;
             }
         }
 
