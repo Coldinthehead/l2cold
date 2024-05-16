@@ -2,7 +2,7 @@
 {
     public static class ServerRandom
     {
-        private static Random _random = new Random();
+        private static Random _random = new Random(DateTime.Now.Millisecond);
 
         public static int Next(int minValue, int maxValue)
         {

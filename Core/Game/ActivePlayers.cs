@@ -13,17 +13,24 @@ namespace Core.Game
             _onlinePlayers[client] = player;
             _activePlayers.Add(player);
         }
-        public void UpdatePlayers()
-        {
-            foreach (var player in _activePlayers)
-            {
-                player.Update();
-            }
-        }
 
         public Player GetPlayer(GameClient client)
         {
             return _onlinePlayers[client];
         }
+
+        public void BroadcastPacket(byte[] packet)
+        {
+            foreach (var client in _onlinePlayers.Keys)
+            {
+                client.SendData(packet);
+            }
+        }
+
+        public IEnumerable<Player> GetOnlinePlayers()
+        {
+            return _onlinePlayers.Values;
+        }
+
     }
 }

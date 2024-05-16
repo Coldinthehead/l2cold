@@ -1,8 +1,8 @@
 ﻿using Core.Game.Network;
+using Core.Game.Network.ClientPacket;
 using Core.Logs;
 using Core.Math;
 using Core.Utils.NetworkBuffers;
-using System.Numerics;
 
 namespace Core.Game.Contorller
 {
@@ -10,10 +10,12 @@ namespace Core.Game.Contorller
     {
         private static Logger<CharMoveController> _logger = Logger<CharMoveController>.BuildLogger();
         private readonly ActivePlayers _players;
+        private readonly ObjectIdFactory _idFactory;
 
-        public CharMoveController(ActivePlayers players)
+        public CharMoveController(ActivePlayers players, ObjectIdFactory idFactory)
         {
             _players = players;
+            _idFactory = idFactory;
         }
 
         public void Run(GameClient client, ReadableBuffer message)
@@ -25,24 +27,17 @@ namespace Core.Game.Contorller
             int moveType = message.ReadInt();
             _logger.Log($"Move from {origin} , to {target}");
 
-            client.SendData(BuildOutMoveToLocation(client, _players.GetPlayer(client), origin, originZ, target, targetZ)) ;
+            var player = _players.GetPlayer(client);
+            player.Position.x = origin.x;
+            player.Position.y = origin.y;
+            player.ZPosition = originZ;
+            var packet = OutPacketFactory.BuildOutMoveToLocation(client, player, origin, originZ, target, targetZ);
+            /*client.SendData(packet);*/
+            _players.BroadcastPacket(packet);
         }
 
-        private byte[] BuildOutMoveToLocation(GameClient client,Player player, Vec2 from, int zFrom, Vec2 target, int targetZ)
-        {
-            var movePacket = new WriteableBuffer();
-            movePacket.WriteByte(0x01)
-                .WriteInt(player.ObjectId)
-                .WriteInt((int)target.x)
-                .WriteInt((int)target.y)
-                .WriteInt(targetZ)
-                .WriteInt((int)from.x)
-                .WriteInt((int)from.y)
-                .WriteInt(zFrom);
 
-
-            return movePacket.toByteArray();
-        }
+ 
 
         
     }

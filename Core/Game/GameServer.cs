@@ -18,11 +18,14 @@ namespace Core.Game
         private List<GameClient> _toRemove = new();
 
         private readonly ActivePlayers _worldPlayers = new();
+        private readonly ObjectIdFactory _idFactory = new();
+        private readonly PlayerRepository _characterRepository;
 
         public GameServer(TcpListener tcpListener, LoginServerService loginServer)
         {
             _connectionListener = tcpListener;
             _loginServer = loginServer;
+            _characterRepository = new PlayerRepository(_idFactory);
         }
 
         public bool Runing => true;
@@ -40,7 +43,6 @@ namespace Core.Game
             ConnectPendingClients();
             ReadActiveClients();
             RemoveInactiveClients();
-            _worldPlayers.UpdatePlayers();
         }
 
         private void ConnectPendingClients()
@@ -87,30 +89,38 @@ namespace Core.Game
             _logger.Log($"Recieveing data from [{client}]");
             var buffer = client.ReceiveRawData();
             int opCode = buffer.ReadByte();
-            _logger.Log($"Received [{opCode.ToHex()}]");
             switch (opCode)
             {
                 case InPacket.PROTOCOL_VERISION:
-                        new ProtocolVersionController().Run(client, buffer);
+                    new ProtocolVersionController().Run(client, buffer);
                     break;
                 case InPacket.REQUEST_AUTHENTICATION:
-                        new RequestAuthController(_loginServer).Run(client, buffer);
+                    new RequestAuthController(_loginServer, _characterRepository).Run(client, buffer);
                     break;
 
                 case InPacket.CHARACTER_SELECTED:
-                        new CharacterSelectedController().Run(client, buffer);
+                    new CharacterSelectedController(_characterRepository).Run(client, buffer);
                     break;
                 case InPacket.EX_PACKET:
-                        _logger.Log($"[EX_PACKET] received from :", client);
+                    _logger.Log($"[EX_PACKET] received from :", client);
                     break;
                 case InPacket.ENTER_WORLD:
-                        new EnterWorldController(_worldPlayers).Run(client, buffer);
+                    new EnterWorldController(_worldPlayers).Run(client, buffer);
                     break;
                 case InPacket.CHARACTER_MOVE_TO_LOCATION:
-                        new CharMoveController(_worldPlayers).Run(client, buffer);
+                    new CharMoveController(_worldPlayers, _idFactory).Run(client, buffer);
+                    break;
+                case 0x48:
+                    _logger.Log($"[VALIEDATE_POSITION] from ", client);
+                    break;
+                case 0x9D:
+                    new SkillCdController().Run(client, buffer);
+                    break;
+                case 0x04:
+                    new ActionController().Run(client, buffer);
                     break;
                 default:
-                        _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");
+                    _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");
                     break;
             }
         }

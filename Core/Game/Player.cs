@@ -1,4 +1,5 @@
-﻿using Core.Math;
+﻿using Core.Game.Data;
+using Core.Math;
 
 namespace Core.Game
 {
@@ -6,11 +7,16 @@ namespace Core.Game
     { 
         public readonly int ObjectId;
         public Vec2 Position;
+        public float ZPosition;
 
-        public Player(int objectId, Vec2 position)
+        public GameCharacter CharacterDetails;
+
+        public Player(int objectId, Vec2 position, float zPosition, GameCharacter details)
         {
             ObjectId = objectId;
             Position = position;
+            ZPosition = zPosition;
+            CharacterDetails = details;
         }
 
         public void Update()

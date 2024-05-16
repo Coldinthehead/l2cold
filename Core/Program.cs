@@ -20,7 +20,7 @@ namespace Core
             {
                 login.Tick();
                 game.Tick();
-                Thread.Sleep(100);
+                Thread.Sleep(10);
             }
 
             game.Stop();

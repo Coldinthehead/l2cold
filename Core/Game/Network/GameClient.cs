@@ -13,12 +13,15 @@ namespace Core.Game.Network
         private IDataCrypter _cryptInterface;
         public SessionKeys Skeys => _sKeys;
 
+        public Player Player { get; set; }
+
         private SessionKeys _sKeys;
         private ReadQue _inQue;
 
         public GameClient(TcpClient client, IDataCrypter cryptInterface)
         {
             _connection = client;
+            _connection.NoDelay = true;
             _cryptInterface = cryptInterface;
             _sKeys = SessionKeys.GetEmptyKeys();
             _inQue = new ReadQue(client);
@@ -48,14 +51,24 @@ namespace Core.Game.Network
         {
             var data = _inQue.GetPacket();
             _cryptInterface.DecryptInPlace(data, 2, data.Length-2);
+            Console.WriteLine($"in << {data[2].ToHex()} for:" + this);
             return new ReadableBuffer(data.Slice(2));
         }
 
         public void SendData(byte[] data)
         {
-            _cryptInterface.CryptInPlace(data, 2, data.Length - 2);
-            _connection.GetStream().Write(data);
-            _connection.GetStream().Flush();
+            Console.WriteLine($"out >> {data[2].ToHex()} for : " + this);
+            var outData = new byte[data.Length];
+            Array.Copy(data, outData, data.Length);
+            _cryptInterface.CryptInPlace(outData, 2, outData.Length - 2);
+            _connection.GetStream().Write(outData);
+        }
+
+        public override string ToString()
+        {
+            return Player == null ?
+             _connection.Client.RemoteEndPoint.ToString()
+             : Player.CharacterDetails.Info.Name;
         }
     }
 }

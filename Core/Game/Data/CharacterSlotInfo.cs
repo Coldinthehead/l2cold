@@ -24,12 +24,13 @@ public struct CharacterSlotInfo
     public double MaxMana;
     public int CurrentClass;
 
+    static Random rnd = new Random();
 
     public static CharacterSlotInfo BuildMockCharacterSlot()
     {
         var info = new CharacterSlotInfo();
         info.Name = "Hello world";
-        info.ObjectId = 1125521;
+        info.ObjectId = rnd.Next(1000, 5020250);
         info.ClanId = 0;
         info.Female = true;
         info.Race = 1;

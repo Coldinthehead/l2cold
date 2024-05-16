@@ -5,12 +5,7 @@ namespace Core.Utils.NetworkBuffers
 
     internal class WriteableBuffer
     {
-        private List<byte> _data;
-
-        public WriteableBuffer()
-        {
-            _data = new List<byte>();
-        }
+        private List<byte> _data = new();
 
  
         private void WriteRaw(byte b)
@@ -102,6 +97,11 @@ namespace Core.Utils.NetworkBuffers
             var d1 = BitConverter.ToInt64(data);
             WriteLong(d1);
             return this;
+        }
+
+        internal object WriteByte(object mOVED_TO_LOCATION)
+        {
+            throw new NotImplementedException();
         }
     }
 }
