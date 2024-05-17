@@ -14,6 +14,7 @@ namespace Core.Game.Network
         public SessionKeys Skeys => _sKeys;
 
         public Player Player { get; set; }
+        public int Ping { get; set; }
 
         private SessionKeys _sKeys;
         private ReadQue _inQue;
@@ -25,6 +26,7 @@ namespace Core.Game.Network
             _cryptInterface = cryptInterface;
             _sKeys = SessionKeys.GetEmptyKeys();
             _inQue = new ReadQue(client);
+            Ping = 0;
         }
 
         public void SetCryptInterface(IDataCrypter cryptInterface)

@@ -1,5 +1,4 @@
 ﻿using Core.Common.Services;
-using Core.Game.Data;
 using Core.Math;
 using Core.Utils.NetworkBuffers;
 
@@ -63,17 +62,18 @@ namespace Core.Game.Network.ClientPacket
             return cryptInit.toByteArray();
         }
 
-        public static byte[] BuildOutMoveToLocation(GameClient client, Player player, Vec2 from, int zFrom, Vec2 target, int targetZ)
+        public static byte[] BuildOutMoveToLocation(GameClient client, Player player,Vec2 target, int targetZ)
         {
+            var origin = player.CalculatePositionOnPing(client.Ping);
             var movePacket = new WriteableBuffer();
             movePacket.WriteByte(OutPacket.MOVED_TO_LOCATION)
                 .WriteInt(player.ObjectId)
                 .WriteInt((int)target.x)
                 .WriteInt((int)target.y)
                 .WriteInt(targetZ)
-                .WriteInt((int)from.x)
-                .WriteInt((int)from.y)
-                .WriteInt(zFrom);
+                .WriteInt((int)origin.x)
+                .WriteInt((int)origin.y)
+                .WriteInt((int)player.ZPosition);
 
             Console.WriteLine("Building packet for player with id" + player.ObjectId);
 
@@ -109,7 +109,7 @@ namespace Core.Game.Network.ClientPacket
                 for (int i = 0; i < 9; i++)
                     packet.WriteInt(0);
 
-                var itemIds = character.ObjectsId;
+                var itemIds = player.CharacterDetails.GeartItemId;
                 packet.WriteInt(itemIds.D_HAIR)
                     .WriteInt(itemIds.R_EAR)
                     .WriteInt(itemIds.L_EAR)
@@ -127,7 +127,7 @@ namespace Core.Game.Network.ClientPacket
                     .WriteInt(itemIds.LR_HAND)
                     .WriteInt(itemIds.HAIR)
                     .WriteInt(itemIds.FACE);
-                itemIds = character.ItemsId;
+                itemIds = player.CharacterDetails.GearObjectId;
                 packet.WriteInt(itemIds.D_HAIR)
                   .WriteInt(itemIds.R_EAR)
                   .WriteInt(itemIds.L_EAR)
@@ -186,7 +186,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(mockCharacter.Info.Race)
                 .WriteInt(mockCharacter.Info.Female ? 1 : 0)
                 .WriteInt(mockCharacter.Info.CurrentClass);
-            var itemIds = mockCharacter.Info.ItemsId;
+            var itemIds = player.CharacterDetails.GeartItemId;
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.HEAD)
               .WriteInt(itemIds.R_HAND)
@@ -443,7 +443,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(0) // max weight
                 .WriteInt(20); // is weapon equipped 20 no 40 yes
 
-            var itemIds = info.ObjectsId;
+            var itemIds = player.CharacterDetails.GearObjectId;
             packet.WriteInt(itemIds.D_HAIR)
                 .WriteInt(itemIds.R_EAR)
                 .WriteInt(itemIds.L_EAR)
@@ -462,7 +462,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(itemIds.HAIR)
                 .WriteInt(itemIds.FACE);
 
-            itemIds = info.ItemsId;
+            itemIds = player.CharacterDetails.GeartItemId;
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.R_EAR)
               .WriteInt(itemIds.L_EAR)

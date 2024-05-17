@@ -1,8 +1,6 @@
-﻿using Core.Game.Data;
-using Core.Game.Network;
+﻿using Core.Game.Network;
 using Core.Logs;
 using Core.Utils.NetworkBuffers;
-using Core.Math;
 using Core.Game.Network.ClientPacket;
 
 namespace Core.Game.Contorller
@@ -39,7 +37,12 @@ namespace Core.Game.Contorller
             client.SendData(OutPacketFactory.BuildSetCompasZone());
             client.SendData(OutPacketFactory.BuildActionFailed());
 
-            
+            var pingPacket = new WriteableBuffer().WriteByte(0xD3).WriteInt(145).toByteArray();
+            client.SendData(pingPacket);
+
+
+
+
             InformClientsWithPlayer(player);
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);

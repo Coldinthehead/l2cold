@@ -9,5 +9,8 @@ namespace Core.Game.Network.ClientPacket
         public const int EX_PACKET = 0xD0;
         public const int ENTER_WORLD = 0x03;
         public const int CHARACTER_MOVE_TO_LOCATION = 0x01;
+        public const int VALIDATE_POSITION = 0x48;
+        public const int REQUEST_SKILL_CD = 0x9D;
+        public const int ACTION = 0x04;
     }
 }

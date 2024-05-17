@@ -1,5 +1,7 @@
 ﻿
 using Core.Game.Network;
+using Core.Game.Network.ClientPacket;
+using Core.Math;
 
 namespace Core.Game
 {
@@ -27,10 +29,26 @@ namespace Core.Game
             }
         }
 
+        public void BroadcastMoveToLocation(Player player, Vec2 target, float zTarget)
+        {
+            foreach (var client in _onlinePlayers.Keys)
+            {
+                var packet = OutPacketFactory.BuildOutMoveToLocation(client, player, target, (int)zTarget);
+                client.SendData(packet);
+            }
+        }
+
         public IEnumerable<Player> GetOnlinePlayers()
         {
             return _onlinePlayers.Values;
         }
 
+        internal void Tick(float dt)
+        {
+            foreach (var p in _activePlayers)
+            {
+                p.Update(dt);
+            }
+        }
     }
 }

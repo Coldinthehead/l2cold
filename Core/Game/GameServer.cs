@@ -4,6 +4,7 @@ using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Logs;
 using Core.Utils;
+using System.Diagnostics;
 using System.Net.Sockets;
 
 
@@ -38,11 +39,12 @@ namespace Core.Game
 
         public void Stop() => _connectionListener.Stop();
 
-        public void Tick()
+        public void Tick(float dt)
         {
             ConnectPendingClients();
             ReadActiveClients();
             RemoveInactiveClients();
+            _worldPlayers.Tick(dt);
         }
 
         private void ConnectPendingClients()
@@ -97,7 +99,6 @@ namespace Core.Game
                 case InPacket.REQUEST_AUTHENTICATION:
                     new RequestAuthController(_loginServer, _characterRepository).Run(client, buffer);
                     break;
-
                 case InPacket.CHARACTER_SELECTED:
                     new CharacterSelectedController(_characterRepository).Run(client, buffer);
                     break;
@@ -110,14 +111,17 @@ namespace Core.Game
                 case InPacket.CHARACTER_MOVE_TO_LOCATION:
                     new CharMoveController(_worldPlayers, _idFactory).Run(client, buffer);
                     break;
-                case 0x48:
-                    _logger.Log($"[VALIEDATE_POSITION] from ", client);
+                case InPacket.VALIDATE_POSITION:
+                    new ValidatePositionController(_worldPlayers).Run(client, buffer);
                     break;
-                case 0x9D:
+                case InPacket.REQUEST_SKILL_CD:
                     new SkillCdController().Run(client, buffer);
                     break;
-                case 0x04:
+                case InPacket.ACTION:
                     new ActionController().Run(client, buffer);
+                    break;
+                case 0xA8:
+                    new NetPingController().Run(client, buffer);
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");
