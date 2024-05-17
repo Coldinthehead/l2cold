@@ -10,6 +10,21 @@ namespace Core
 {
     public class Program
     {
+        public class Time()
+        {
+            private readonly Stopwatch _time = new();
+
+
+            public void Start()
+            {
+                _time.Start();
+            }
+
+            public void Restart()
+            {
+                _time.Restart();
+            }
+        }
         static void Main(string[] args)
         {
             var login = new LoginServer(new TcpListener(IPAddress.Parse("127.0.0.1"), 2106));
@@ -20,10 +35,17 @@ namespace Core
             login.Start();
             var dt = 0.0f;
             time.Start();
+            float delta = 0f;
+            float targetDelta = 0.064f;
             while (login.Running && game.Runing)
-            { 
+            {
+                delta += dt;
                 login.Tick();
-                game.Tick(dt);
+                if (delta >= targetDelta)
+                {
+                    delta -= targetDelta;
+                    game.Tick(targetDelta);
+                }
                 Thread.Sleep(25);
                 dt = time.ElapsedMilliseconds * 0.001f;
                 time.Restart();

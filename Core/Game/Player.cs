@@ -8,7 +8,7 @@ namespace Core.Game
     public class Player
     { 
         public readonly int ObjectId;
-        public Vec2 Position;
+        public Vec2 ClientPosition;
         public float ZPosition;
         public Vec2 CurrentTarget;
         public float ZTarget;
@@ -19,21 +19,19 @@ namespace Core.Game
 
         public GameCharacter CharacterDetails;
 
-        private Stopwatch _time;
 
         public Player(int objectId, Vec2 position, float zPosition, GameCharacter details)
         {
             ObjectId = objectId;
-            Position = position;
+            ClientPosition = position;
             ZPosition = zPosition;
             CharacterDetails = details;
             ServerPosition = new Vec2(position.x, position.y);
-            _time = new Stopwatch();
         }
 
-        public void UpdatePosition(Vec2 newPos,  float zPosition) 
+        public void UpdateClientPosition(Vec2 newPos,  float zPosition) 
         {
-            Position = newPos;
+            ClientPosition = newPos;
             ZPosition = zPosition;
         }
 
@@ -58,8 +56,6 @@ namespace Core.Game
                 dir.y *= step;
                 ServerPosition.x += dir.x;
                 ServerPosition.y += dir.y;
-                /*                Console.WriteLine($"udpate : {_moveDistance}");
-                */
                 _moveDistance -= step;
                 if (_moveDistance - 16 <= 0)
                     _moveDistance = 0;

@@ -28,16 +28,10 @@ namespace Core.Game.Contorller
             _logger.Log($"Move from {origin} , to {target}");
 
             var player = _players.GetPlayer(client);
-            player.UpdatePosition(origin, originZ);
+            player.UpdateClientPosition(origin, originZ);
             player.Move(target, targetZ);
             var packet = OutPacketFactory.BuildOutMoveToLocation(client, player, target, targetZ);
-            /*client.SendData(packet);*/
             _players.BroadcastPacket(packet);
-
-            var clientDistance = Vec2.Distance(origin, client.Player.CurrentTarget);
-            var moveSpeed = player.CharacterDetails.Stats.RunSpd * 50 * 0.001f;
-            var pingTime = client.Ping * 0.001f;
-            var serverDistance = Vec2.Distance(client.Player.ServerPosition, client.Player.CurrentTarget);
            
         }
 

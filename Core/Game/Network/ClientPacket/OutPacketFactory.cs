@@ -177,8 +177,8 @@ namespace Core.Game.Network.ClientPacket
             var mockCharacter = player.CharacterDetails;
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHAR_INFO)
-                .WriteInt((int)player.Position.x)
-                .WriteInt((int)player.Position.y)
+                .WriteInt((int)player.ClientPosition.x)
+                .WriteInt((int)player.ClientPosition.y)
                 .WriteInt((int)player.ZPosition)
                 .WriteInt(0) // on boat
                 .WriteInt(player.ObjectId)
@@ -333,7 +333,7 @@ namespace Core.Game.Network.ClientPacket
             packet.WriteByte(OutPacket.TARGET_SELECTED)
                 .WriteInt(player.CharacterDetails.Info.ObjectId)
                 .WriteInt(1)
-                .WriteDouble(player.Position.x).WriteDouble(player.Position.y).WriteDouble(player.ZPosition);
+                .WriteDouble(player.ClientPosition.x).WriteDouble(player.ClientPosition.y).WriteDouble(player.ZPosition);
 
             return packet.toByteArray();
         }
@@ -411,8 +411,8 @@ namespace Core.Game.Network.ClientPacket
             var stats = character.Stats;
             packet.WriteByte(OutPacket.USER_INFO)
 
-                .WriteInt((int)player.Position.x)
-                .WriteInt((int)player.Position.y)
+                .WriteInt((int)player.ClientPosition.x)
+                .WriteInt((int)player.ClientPosition.y)
                 .WriteInt((int)player.ZPosition)
                 .WriteInt(0) // heading
                 .WriteInt(info.ObjectId)
