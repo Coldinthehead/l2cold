@@ -1,4 +1,5 @@
 ﻿using Core.Common.Services;
+using Core.Game.World.Actor;
 using Core.Math;
 using Core.Utils.NetworkBuffers;
 
@@ -64,7 +65,7 @@ namespace Core.Game.Network.ClientPacket
 
         public static byte[] BuildOutMoveToLocation(GameClient client, Player player,Vec2 target, int targetZ)
         {
-            var origin = player.CalculatePositionOnPing(client.Ping);
+            var origin = player.ServerPosition;
             var movePacket = new WriteableBuffer();
             movePacket.WriteByte(OutPacket.MOVED_TO_LOCATION)
                 .WriteInt(player.ObjectId)
@@ -258,7 +259,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(0) // ally crest id
                 .WriteInt(0) // ??
                 .WriteByte(1) // 1 - stand 0 - sit
-                .WriteByte(1) // is runing
+                .WriteByte(0) // is runing
                 .WriteByte(0) // in combat
                 .WriteByte(0) // is fake death?
                 .WriteByte(0) // invisible
@@ -588,6 +589,11 @@ namespace Core.Game.Network.ClientPacket
 
             var res = packet.toByteArray();
             return res;
+        }
+
+        public static byte[] BuildNetPing(GameClient client)
+        {
+            return new WriteableBuffer().WriteByte(OutPacket.NET_PING).WriteInt(145).toByteArray();
         }
     }
 }

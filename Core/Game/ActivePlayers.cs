@@ -1,6 +1,6 @@
-﻿
-using Core.Game.Network;
+﻿using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
+using Core.Game.World.Actor;
 using Core.Math;
 
 namespace Core.Game

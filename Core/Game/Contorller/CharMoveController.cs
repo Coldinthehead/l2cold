@@ -12,6 +12,7 @@ namespace Core.Game.Contorller
         private readonly ActivePlayers _players;
         private readonly ObjectIdFactory _idFactory;
 
+
         public CharMoveController(ActivePlayers players, ObjectIdFactory idFactory)
         {
             _players = players;

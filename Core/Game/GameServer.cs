@@ -4,7 +4,6 @@ using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Logs;
 using Core.Utils;
-using System.Diagnostics;
 using System.Net.Sockets;
 
 
@@ -39,11 +38,16 @@ namespace Core.Game
 
         public void Stop() => _connectionListener.Stop();
 
-        public void Tick(float dt)
+        public void Tick()
         {
             ConnectPendingClients();
             ReadActiveClients();
             RemoveInactiveClients();
+          
+        }
+
+        public void UpdateWorld(float dt)
+        {
             _worldPlayers.Tick(dt);
         }
 

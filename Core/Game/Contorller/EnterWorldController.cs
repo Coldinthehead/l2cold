@@ -2,6 +2,7 @@
 using Core.Logs;
 using Core.Utils.NetworkBuffers;
 using Core.Game.Network.ClientPacket;
+using Core.Game.World.Actor;
 
 namespace Core.Game.Contorller
 {
@@ -37,15 +38,16 @@ namespace Core.Game.Contorller
             client.SendData(OutPacketFactory.BuildSetCompasZone());
             client.SendData(OutPacketFactory.BuildActionFailed());
 
-            var pingPacket = new WriteableBuffer().WriteByte(0xD3).WriteInt(145).toByteArray();
-            client.SendData(pingPacket);
-
-
-
-
+            SendNetPingPacket(client);
             InformClientsWithPlayer(player);
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);
+        }
+
+        private void SendNetPingPacket(GameClient client)
+        {
+            var pingPacket = OutPacketFactory.BuildNetPing(client);
+            client.SendData(pingPacket);
         }
 
         private void InformClientsWithPlayer(Player player)

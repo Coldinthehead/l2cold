@@ -9,6 +9,7 @@ namespace Core.Game.Contorller
 {
     public class ValidatePositionController : IPacketController
     {
+
         private static Logger<ValidatePositionController> _logger = Logger<ValidatePositionController>.BuildLogger();
         private readonly ActivePlayers _activePlayers;
 
@@ -16,6 +17,7 @@ namespace Core.Game.Contorller
         {
             _activePlayers = activePlayers;
         }
+        public static int SYNC_THRESHOLD = 30;
 
         public void Run(GameClient client, ReadableBuffer message)
         {
@@ -23,19 +25,15 @@ namespace Core.Game.Contorller
             var currentZ = message.ReadInt(); 
             var heading = message.ReadInt();
             var boat = message.ReadInt();
+            _logger.Log($"{heading}");
 
-            client.Player.UpdateClientPosition(current, currentZ);
             var clientDistance = Vec2.Distance(current, client.Player.CurrentTarget);
             var serverDistance = Vec2.Distance(client.Player.ServerPosition, client.Player.CurrentTarget);
-          /*  _logger.Log($"client :{current}");
-            _logger.Log($"server : {client.Player.ServerPosition}");*/
+            var pingComp = client.Ping * 0.001f * client.Player.CharacterDetails.Stats.RunSpd;
             _logger.Log($"Curret Client dist : {clientDistance}");
             _logger.Log($"Current Server dist : {serverDistance}");
             _logger.Log($"Diff client - server :{clientDistance - serverDistance}");
-
-            /* var player = client.Player;
-             _activePlayers.BroadcastMoveToLocation(player, player.CurrentTarget, player.ZTarget);*/
-
+            client.Player.UpdateClientPosition(current, currentZ);
         }
     }
 }

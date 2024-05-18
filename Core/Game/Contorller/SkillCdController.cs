@@ -10,7 +10,5 @@ namespace Core.Game.Contorller
         {
             client.SendData(OutPacketFactory.BuildSkillCd());
         }
-
-       
     }
 }

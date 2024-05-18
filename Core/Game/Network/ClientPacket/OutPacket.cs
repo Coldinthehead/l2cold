@@ -25,6 +25,7 @@ namespace Core.Game.Network.ClientPacket
         public const int CHARACTER_SELECTED = 0x15;
         public const int SKILL_CD = 0xC1;
         public const int RELATION_CHANGED = 0xCE;
+        public const int NET_PING = 0xD3;
 
     }
 }
