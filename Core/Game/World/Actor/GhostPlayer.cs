@@ -19,6 +19,8 @@ namespace Core.Game.World.Actor
         public CharacterStats Stats { get; private set; }
         public CharacterGear GearObjectId { get; private set; }
         public CharacterGear GearItemId { get; private set; }
+
+        public int Heading { get; private set; }
         public bool IsMoving => _movement.IsMoving;
 
         private int _pathIndex = 0;

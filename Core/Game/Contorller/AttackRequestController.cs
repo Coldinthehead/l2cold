@@ -41,8 +41,8 @@ namespace Core.Game.Contorller
                 return;
             }
 
-            client.Player.StartFollowTarget(target);
-            var distance = 100;
+            var distance = 50;
+            client.Player.StartFollowTarget(target, distance);
             var packet = OutPacketFactory.BuildMoveToPawn(client.Player, target, distance);
             _worldPlayers.BroadcastPacket(packet);
             

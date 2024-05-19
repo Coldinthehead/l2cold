@@ -4,7 +4,7 @@ using Core.Math;
 namespace Core.Game.World.Actor
 {
 
-    public struct MovementComponent
+    public class MovementComponent
     {
         public Vec2 Position;
         public Vec2 Target => _moveTarget;
@@ -17,7 +17,7 @@ namespace Core.Game.World.Actor
         private float _moveTimer;
 
         public const float ACCELERATION_TIME = 0.5f;
-        
+
         public MovementComponent(CharacterStats stats)
         {
             _stats = stats;
@@ -29,6 +29,11 @@ namespace Core.Game.World.Actor
             _moveTarget = target;
             _moveDirection = Vec2.Direction(Position, target);
             _moveDistance = Vec2.Distance(Position, target);
+        }
+
+        public void Stop()
+        {
+            _moveTimer = 0;
         }
         public void Tick(float dt)
         {
@@ -51,14 +56,69 @@ namespace Core.Game.World.Actor
         }
     }
 
-    public class Player : IMovable , ICharacter
+    public class FollowTargetComponent
     {
+        public event Action<ICharacter> OnTargetReached;
+        private readonly MovementComponent _movement;
+
+        public ICharacter FollowTarget;
+        private int _followDistance;
+
+        private float _currentDistance;
+
+        public FollowTargetComponent(MovementComponent movement)
+        {
+            _movement = movement;
+        }
+
+        public void Update(float dt)
+        {
+            var dist = Vec2.Distance(_movement.Position, FollowTarget.Origin);
+            if (dist - _followDistance >= 0)
+            {
+                _movement.Move(FollowTarget.Origin, FollowTarget.OriginZ);
+                _movement.Tick(dt);
+            }
+            else
+            {
+                var dir = Vec2.Direction(_movement.Position, FollowTarget.Origin);
+                var compStep = dir * (_followDistance - 10);
+                var finalPos = FollowTarget.Origin - compStep;
+                _movement.Position = finalPos;
+                _movement.Stop();
+                OnTargetReached?.Invoke(FollowTarget);
+            }
+        }
+
+        public void BeakState()
+        {
+            OnTargetReached?.Invoke(FollowTarget);
+        }
+
+        public void SetTarget(ICharacter target, int distance)
+        {
+            FollowTarget = target;
+            _followDistance = distance;
+            _currentDistance = Vec2.Distance(_movement.Position, target.Origin);
+        }
+    }
+
+    public class Player : IMovable, ICharacter
+    {
+        public event Action<Player> OnForceStopMove;
+        enum BehaviourState
+        {
+            idle,
+            MoveToPoint,
+            FollowTarget,
+        }
+
         public int ObjectId { get; private set; }
         public Vec2 ClientPosition;
         public float OriginZ { get; private set; }
         public Vec2 Target => _movement.Target;
         public float TargetZ { get; private set; }
-        public int ServerHeading;
+        public int Heading { get; private set; }
         public Vec2 Origin => _movement.Position;
 
         public string Title { get; private set; }
@@ -69,26 +129,33 @@ namespace Core.Game.World.Actor
 
         public bool IsMoving => _movement.IsMoving;
 
-        public ICharacter CharacterTarget { get;  set; }
+        public ICharacter CharacterTarget { get; set; }
 
         private MovementComponent _movement;
+        private FollowTargetComponent _followTarget;
+
+        private BehaviourState _currentBehaviour;
         public Player(int objectId, Vec2 position, float zPosition, GameCharacter details)
         {
             ObjectId = objectId;
             ClientPosition = position;
             OriginZ = zPosition;
             Title = details.Title;
-            Info = details.Info; 
+            Info = details.Info;
             Stats = details.Stats;
             GearObjectId = details.GearObjectId;
             GearItemId = details.GeartItemId;
             _movement = new MovementComponent(Stats)
             {
                 Position = position,
-                
+
             };
+            _followTarget = new FollowTargetComponent(_movement);
+            _currentBehaviour = BehaviourState.idle;
+            _followTarget.OnTargetReached += OnFolowTargetReached;
         }
 
+   
         public void UpdateClientPosition(Vec2 newPos, float zPosition)
         {
             ClientPosition = newPos;
@@ -97,9 +164,28 @@ namespace Core.Game.World.Actor
 
         public void Move(Vec2 target, float targetZ)
         {
-            _movement.Move(target, targetZ);
-            TargetZ = targetZ;
-            ServerHeading = CalculateHeadingFrom(Origin, target);
+            switch (_currentBehaviour)
+            {
+                case BehaviourState.FollowTarget:
+                {
+                        _followTarget.BeakState();
+                        _movement.Move(target, targetZ);
+                        TargetZ = targetZ;
+                        Heading = CalculateHeadingFrom(Origin, target);
+                        _currentBehaviour = BehaviourState.MoveToPoint;
+                    }
+                break;
+                default:
+                    {
+                        _movement.Move(target, targetZ);
+                        TargetZ = targetZ;
+                        Heading = CalculateHeadingFrom(Origin, target);
+                        _currentBehaviour = BehaviourState.MoveToPoint;
+                    }
+
+                    break;
+            }
+           
         }
 
         private int CalculateHeadingFrom(Vec2 origin, Vec2 target)
@@ -109,12 +195,34 @@ namespace Core.Game.World.Actor
         }
         public void Update(float dt)
         {
-            _movement.Tick(dt);
+            switch (_currentBehaviour)
+            {
+                case BehaviourState.MoveToPoint:
+                    {
+                        _movement.Tick(dt);
+
+                    }
+                    break;
+                case BehaviourState.FollowTarget:
+                    {
+                        _followTarget.Update(dt);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public void StartFollowTarget(ICharacter target)
+        public void StartFollowTarget(ICharacter target, int distance)
         {
-            
+            _currentBehaviour = BehaviourState.FollowTarget;
+            _followTarget.SetTarget(target, distance);
+        }
+
+        private void OnFolowTargetReached(ICharacter character)
+        {
+            _currentBehaviour = BehaviourState.idle;
+            OnForceStopMove?.Invoke(this);
         }
     }
 }

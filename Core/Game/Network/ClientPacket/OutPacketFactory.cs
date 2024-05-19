@@ -621,5 +621,18 @@ namespace Core.Game.Network.ClientPacket
 
             return packet.toByteArray();
         }
+
+        public static byte[] BuildStopMove(IMovable player)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x47)
+                .WriteInt(player.ObjectId)
+                .WriteInt((int)player.Origin.x)
+                .WriteInt((int)player.Origin.y)
+                .WriteInt((int)player.OriginZ)
+                .WriteInt(player.Heading);// heading;
+
+            return packet.toByteArray();
+        }
     }
 }

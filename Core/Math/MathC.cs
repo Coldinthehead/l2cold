@@ -7,13 +7,13 @@ namespace Core.Math
         public float x;
         public float y;
 
-        public Vec2(float x, float y) 
-            => (this.x, this.y) = (x,y);
+        public Vec2(float x, float y)
+            => (this.x, this.y) = (x, y);
 
         public Vec2(double x1, double y1) : this()
         {
-           x = (float)x1;
-           y = (float)y1;
+            x = (float)x1;
+            y = (float)y1;
         }
 
         public override string ToString()
@@ -21,16 +21,21 @@ namespace Core.Math
             return $"Vec2({x}, {y})";
         }
 
-        public static Vec2 operator*(Vec2 lhs, float delta)
+        public static Vec2 operator *(Vec2 lhs, float delta)
         {
             return new Vec2(lhs.x * delta, lhs.y * delta);
         }
 
-        public static Vec2 operator+(Vec2 lhs, Vec2 rhs)
+        public static Vec2 operator +(Vec2 lhs, Vec2 rhs)
         {
             return new Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
         }
 
+        public static Vec2 operator -(Vec2 lhs, Vec2 rhs)
+        {
+            return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
+        }
+    
         public static float Distance(Vec2 a , Vec2 b)
         {
             var dir = new Vec2(a.x - b.x, a.y - b.y);

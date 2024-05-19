@@ -42,6 +42,12 @@ namespace Core.Game.Contorller
             InformClientsWithPlayer(player);
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);
+
+            player.OnForceStopMove += (player) => 
+            {
+                var packet = OutPacketFactory.BuildStopMove(player);
+                _players.BroadcastPacket(packet);
+            };
         }
 
         private void SendNetPingPacket(GameClient client)

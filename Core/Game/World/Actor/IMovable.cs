@@ -10,6 +10,7 @@ namespace Core.Game.World.Actor
         public float TargetZ { get; }
         public Vec2 Origin { get; }
         public float OriginZ { get; }
+        public int Heading { get; }
     }
 
     public interface ICharacter : IMovable
