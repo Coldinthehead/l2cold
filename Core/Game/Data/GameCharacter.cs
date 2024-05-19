@@ -4,7 +4,7 @@
 public struct GameCharacter
 {
     public string Title;
-    public CharacterSlotInfo Info;
+    public CharacterInfo Info;
     public double x, y, z;
     public CharacterStats Stats;
     public CharacterGear GearObjectId;
@@ -14,7 +14,7 @@ public struct GameCharacter
     {
         var character = new GameCharacter();
         character.Title = "1234567";
-        character.Info = CharacterSlotInfo.BuildMockCharacterSlot();
+        character.Info = CharacterInfo.BuildMockCharacterSlot();
         character.Stats = CharacterStats.BuildMockCharacterStats();
         character.GearObjectId = new CharacterGear();
         character.GeartItemId = new CharacterGear();

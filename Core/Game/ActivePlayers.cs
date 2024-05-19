@@ -8,7 +8,7 @@ namespace Core.Game
     public class ActivePlayers
     {
         private Dictionary<GameClient, Player> _onlinePlayers = new();
-        private List<Player> _activePlayers = new();
+        private List<ICharacter> _activePlayers = new();
 
         public void AddPlayer(GameClient client, Player player)
         {
@@ -33,14 +33,14 @@ namespace Core.Game
         {
             foreach (var client in _onlinePlayers.Keys)
             {
-                var packet = OutPacketFactory.BuildOutMoveToLocation(client, player, target, (int)zTarget);
+                var packet = OutPacketFactory.BuildOutMoveToLocation(player, target, (int)zTarget);
                 client.SendData(packet);
             }
         }
 
-        public IEnumerable<Player> GetOnlinePlayers()
+        public IEnumerable<ICharacter> GetOnlinePlayers()
         {
-            return _onlinePlayers.Values;
+            return _activePlayers;
         }
 
         internal void Tick(float dt)
@@ -49,6 +49,18 @@ namespace Core.Game
             {
                 p.Update(dt);
             }
+        }
+
+        public void AddGhost(GhostPlayer ghostPlayer)
+        {
+            _activePlayers.Add(ghostPlayer);
+            ghostPlayer.OnMovement += OnGhostMovement;
+        }
+
+        private void OnGhostMovement(IMovable character)
+        {
+            var packet = OutPacketFactory.BuildOutMoveToLocation(character, character.Target,(int) character.TargetZ);
+            BroadcastPacket(packet);
         }
     }
 }

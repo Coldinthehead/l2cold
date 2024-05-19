@@ -30,7 +30,7 @@ namespace Core.Game.Contorller
             if (_loginServer.IsAccountLoggedIn(accDetails))
             {
                 var savedCharacter = _characterRepository.LoadCharacterList();
-                client.SendData(OutPacketFactory.BuildCharInfo(accDetails, savedCharacter));
+                client.SendData(OutPacketFactory.BuildCharSelectInfo(accDetails, savedCharacter));
                 client.SetSessionKeys(sessionKeys);
             }
         }

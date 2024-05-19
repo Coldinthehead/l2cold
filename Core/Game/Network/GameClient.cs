@@ -71,7 +71,7 @@ namespace Core.Game.Network
         {
             return Player == null ?
              _connection.Client.RemoteEndPoint.ToString()
-             : Player.CharacterDetails.Info.Name;
+             : Player.Info.Name;
         }
     }
 }

@@ -42,7 +42,7 @@ public struct CharacterStats
         stats.MatkSpd = 10;
         stats.Mdef = 10;
 
-        stats.RunSpd = 2500;
+        stats.RunSpd = 200;
         stats.WalkSpd = 100;
 
         return stats;

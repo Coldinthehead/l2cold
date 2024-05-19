@@ -9,13 +9,12 @@ namespace Core.Game.Network.ClientPacket
     {
         public static byte[] BuildSelectedCharacter(int pkey2, Player player)
         {
-            var character = player.CharacterDetails;
-            var info = player.CharacterDetails.Info;
+            var info = player.Info;
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_SELECTED)
                 .WriteString(info.Name)
                 .WriteInt(info.ObjectId)
-                .WriteString(character.Title)
+                .WriteString(player.Title)
                 .WriteInt(pkey2)
                 .WriteInt(info.ClanId)
                 .WriteInt(0)
@@ -23,7 +22,9 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(info.Race)
                 .WriteInt(info.CurrentClass)
                 .WriteInt(1) // is active ?
-                .WriteInt((int)character.x).WriteInt((int)character.y).WriteInt((int)character.z)
+                .WriteInt((int)player.ClientPosition.x)
+                .WriteInt((int)player.ClientPosition.y)
+                .WriteInt((int)player.OriginZ)
                 .WriteDouble(info.CurrentHealth)
                 .WriteDouble(info.CurrentMana)
                 .WriteInt(info.Sp)
@@ -63,9 +64,9 @@ namespace Core.Game.Network.ClientPacket
             return cryptInit.toByteArray();
         }
 
-        public static byte[] BuildOutMoveToLocation(GameClient client, Player player,Vec2 target, int targetZ)
+        public static byte[] BuildOutMoveToLocation(IMovable player,Vec2 target, int targetZ)
         {
-            var origin = player.ServerPosition;
+            var origin = player.Origin;
             var movePacket = new WriteableBuffer();
             movePacket.WriteByte(OutPacket.MOVED_TO_LOCATION)
                 .WriteInt(player.ObjectId)
@@ -74,14 +75,14 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(targetZ)
                 .WriteInt((int)origin.x)
                 .WriteInt((int)origin.y)
-                .WriteInt((int)player.ZPosition);
+                .WriteInt((int)player.OriginZ);
 
             Console.WriteLine("Building packet for player with id" + player.ObjectId);
 
             return movePacket.toByteArray();
         }
 
-        public static byte[] BuildCharInfo(LSAccountDetails accDetails, List<Player> characterList)
+        public static byte[] BuildCharSelectInfo(LSAccountDetails accDetails, List<Player> characterList)
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_LIST_INFO)
@@ -89,7 +90,7 @@ namespace Core.Game.Network.ClientPacket
 
             foreach (var player in characterList)
             {
-                var character = player.CharacterDetails.Info;
+                var character = player.Info;
                 packet.WriteString(character.Name)
                     .WriteInt(character.ObjectId)
                     .WriteString(accDetails.Id)
@@ -110,7 +111,7 @@ namespace Core.Game.Network.ClientPacket
                 for (int i = 0; i < 9; i++)
                     packet.WriteInt(0);
 
-                var itemIds = player.CharacterDetails.GeartItemId;
+                var itemIds = player.GearItemId;
                 packet.WriteInt(itemIds.D_HAIR)
                     .WriteInt(itemIds.R_EAR)
                     .WriteInt(itemIds.L_EAR)
@@ -128,7 +129,7 @@ namespace Core.Game.Network.ClientPacket
                     .WriteInt(itemIds.LR_HAND)
                     .WriteInt(itemIds.HAIR)
                     .WriteInt(itemIds.FACE);
-                itemIds = player.CharacterDetails.GearObjectId;
+                itemIds = player.GearObjectId;
                 packet.WriteInt(itemIds.D_HAIR)
                   .WriteInt(itemIds.R_EAR)
                   .WriteInt(itemIds.L_EAR)
@@ -160,7 +161,7 @@ namespace Core.Game.Network.ClientPacket
             }
             return packet.toByteArray();
         }
-        public static byte[] BuildRelationChanged(Player player)
+        public static byte[] BuildRelationChanged(ICharacter player)
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.RELATION_CHANGED)
@@ -173,21 +174,21 @@ namespace Core.Game.Network.ClientPacket
             return packet.toByteArray();
         }
 
-        public static byte[] BuildCharInfo(Player player)
+        public static byte[] BuildCharInfo(ICharacter player)
         {
-            var mockCharacter = player.CharacterDetails;
             var packet = new WriteableBuffer();
+            var info = player.Info;
             packet.WriteByte(OutPacket.CHAR_INFO)
-                .WriteInt((int)player.ClientPosition.x)
-                .WriteInt((int)player.ClientPosition.y)
-                .WriteInt((int)player.ZPosition)
+                .WriteInt((int)player.Origin.x)
+                .WriteInt((int)player.Origin.y)
+                .WriteInt((int)player.OriginZ)
                 .WriteInt(0) // on boat
                 .WriteInt(player.ObjectId)
-                .WriteString(mockCharacter.Info.Name) //playerName
-                .WriteInt(mockCharacter.Info.Race)
-                .WriteInt(mockCharacter.Info.Female ? 1 : 0)
-                .WriteInt(mockCharacter.Info.CurrentClass);
-            var itemIds = player.CharacterDetails.GeartItemId;
+                .WriteString(info.Name) //playerName
+                .WriteInt(info.Race)
+                .WriteInt(info.Female ? 1 : 0)
+                .WriteInt(info.CurrentClass);
+            var itemIds = player.GearItemId;
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.HEAD)
               .WriteInt(itemIds.R_HAND)
@@ -231,35 +232,36 @@ namespace Core.Game.Network.ClientPacket
                 .WriteShort(0)
                 .WriteShort(0);
 
+            var stats = player.Stats;
             packet.WriteInt(0) // pvp flag
                 .WriteInt(0) //arma
-                .WriteInt(mockCharacter.Stats.MatkSpd)
-                .WriteInt(mockCharacter.Stats.PatkSpd)
+                .WriteInt(stats.MatkSpd)
+                .WriteInt(stats.PatkSpd)
                 .WriteInt(0) // pvp flag
                 .WriteInt(0) //karma
-                .WriteInt(mockCharacter.Stats.RunSpd)
-                .WriteInt(mockCharacter.Stats.WalkSpd)
-                .WriteInt(mockCharacter.Stats.RunSpd) // swim
-                .WriteInt(mockCharacter.Stats.WalkSpd) // swim
-                .WriteInt(mockCharacter.Stats.RunSpd) // fly
-                .WriteInt(mockCharacter.Stats.WalkSpd) // fly
-                .WriteInt(mockCharacter.Stats.RunSpd) // fly
-                .WriteInt(mockCharacter.Stats.WalkSpd) // fly
+                .WriteInt(stats.RunSpd)
+                .WriteInt(stats.WalkSpd)
+                .WriteInt(stats.RunSpd) // swim
+                .WriteInt(stats.WalkSpd) // swim
+                .WriteInt(stats.RunSpd) // fly
+                .WriteInt(stats.WalkSpd) // fly
+                .WriteInt(stats.RunSpd) // fly
+                .WriteInt(stats.WalkSpd) // fly
                 .WriteDouble(1.0) // move speed multiplier
                 .WriteDouble(1.0) // attack speed multiplier
                 .WriteDouble(16.0) // coll radius
                 .WriteDouble(32.0) // coll height
-                .WriteInt(mockCharacter.Info.HairStyle)
-                .WriteInt(mockCharacter.Info.HairColor)
-                .WriteInt(mockCharacter.Info.Face)
-                .WriteString(mockCharacter.Title)
+                .WriteInt(info.HairStyle)
+                .WriteInt(info.HairColor)
+                .WriteInt(info.Face)
+                .WriteString(player.Title)
                 .WriteInt(0) // clanid
                 .WriteInt(0) // clan crest id
                 .WriteInt(0) // ally id
                 .WriteInt(0) // ally crest id
                 .WriteInt(0) // ??
                 .WriteByte(1) // 1 - stand 0 - sit
-                .WriteByte(0) // is runing
+                .WriteByte(1) // is runing
                 .WriteByte(0) // in combat
                 .WriteByte(0) // is fake death?
                 .WriteByte(0) // invisible
@@ -270,7 +272,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(0) // status effect mask
                 .WriteByte(0) // rec left
                 .WriteShort(0) // rec have
-                .WriteInt(mockCharacter.Info.CurrentClass)
+                .WriteInt(info.CurrentClass)
                 .WriteInt(24555) // cp cur
                 .WriteInt(2555) // cp max
                 .WriteByte(0) // enchant effect
@@ -332,9 +334,11 @@ namespace Core.Game.Network.ClientPacket
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.TARGET_SELECTED)
-                .WriteInt(player.CharacterDetails.Info.ObjectId)
+                .WriteInt(player.Info.ObjectId)
                 .WriteInt(1)
-                .WriteDouble(player.ClientPosition.x).WriteDouble(player.ClientPosition.y).WriteDouble(player.ZPosition);
+                .WriteDouble(player.ClientPosition.x)
+                .WriteDouble(player.ClientPosition.y)
+                .WriteDouble(player.OriginZ);
 
             return packet.toByteArray();
         }
@@ -407,14 +411,14 @@ namespace Core.Game.Network.ClientPacket
         public static byte[] BuildMockUserInfo(GameClient client, Player player)
         {
             var packet = new WriteableBuffer();
-            var character = player.CharacterDetails;
+            var character = player;
             var info = character.Info;
             var stats = character.Stats;
             packet.WriteByte(OutPacket.USER_INFO)
 
                 .WriteInt((int)player.ClientPosition.x)
                 .WriteInt((int)player.ClientPosition.y)
-                .WriteInt((int)player.ZPosition)
+                .WriteInt((int)player.OriginZ)
                 .WriteInt(0) // heading
                 .WriteInt(info.ObjectId)
 
@@ -444,7 +448,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(0) // max weight
                 .WriteInt(20); // is weapon equipped 20 no 40 yes
 
-            var itemIds = player.CharacterDetails.GearObjectId;
+            var itemIds = player.GearObjectId;
             packet.WriteInt(itemIds.D_HAIR)
                 .WriteInt(itemIds.R_EAR)
                 .WriteInt(itemIds.L_EAR)
@@ -463,7 +467,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(itemIds.HAIR)
                 .WriteInt(itemIds.FACE);
 
-            itemIds = player.CharacterDetails.GeartItemId;
+            itemIds = player.GearItemId;
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.R_EAR)
               .WriteInt(itemIds.L_EAR)

@@ -31,7 +31,7 @@ namespace Core.Game.Contorller
             var player = _players.GetPlayer(client);
             player.UpdateClientPosition(origin, originZ);
             player.Move(target, targetZ);
-            var packet = OutPacketFactory.BuildOutMoveToLocation(client, player, target, targetZ);
+            var packet = OutPacketFactory.BuildOutMoveToLocation(player, target, targetZ);
             _players.BroadcastPacket(packet);
            
         }

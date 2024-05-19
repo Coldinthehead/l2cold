@@ -1,5 +1,7 @@
 ﻿
 using Core.Game.Data;
+using Core.Game.World.Actor;
+using Core.Math;
 
 namespace Core.Game
 {
@@ -26,6 +28,23 @@ namespace Core.Game
             return _savedPlayers;
         }
 
+        public GhostPlayer BuildGhost()
+        {
+            var data = GameCharacter.BuildMockCharacter();
+            data.Info.ObjectId = _idFactory.GetFreeId();
+            data.Info.Name = "Ghost" + data.Info.ObjectId;
+
+            var ghost =  new GhostPlayer(data.Info.ObjectId, new Math.Vec2(data.x, data.y)
+                , (float)data.z, data);
+
+            ghost.AddMoveNode(new Math.Vec2(data.x, data.y));
+            ghost.AddMoveNode(new Vec2(7835,7208));
+            ghost.AddMoveNode(new Vec2(8469, 7328));
+            ghost.AddMoveNode(new Vec2(7052, 7393));
+
+            return ghost;
+        }
+
         private Player BuildPlayer()
         {
             var characterData = GameCharacter.BuildMockCharacter();
@@ -33,7 +52,7 @@ namespace Core.Game
             characterData.Info.Name = "Hello" + characterData.Info.ObjectId;
 
             return new Player(characterData.Info.ObjectId
-                , new Math.Vec2(characterData.x, characterData.y)
+                , new Vec2(characterData.x, characterData.y)
                 , (float)characterData.z
                 , characterData);
 

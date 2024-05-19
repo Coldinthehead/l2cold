@@ -27,12 +27,12 @@ namespace Core.Game.Contorller
             var boat = message.ReadInt();
             _logger.Log($"{heading}");
 
-            var clientDistance = Vec2.Distance(current, client.Player.CurrentTarget);
-            var serverDistance = Vec2.Distance(client.Player.ServerPosition, client.Player.CurrentTarget);
-            var pingComp = client.Ping * 0.001f * client.Player.CharacterDetails.Stats.RunSpd;
-            _logger.Log($"Curret Client dist : {clientDistance}");
+            var clientDistance = Vec2.Distance(current, client.Player.Target);
+            var serverDistance = Vec2.Distance(client.Player.Origin, client.Player.Target);
+            var pingComp = client.Ping * 0.001f * client.Player.Stats.RunSpd;
+      /*      _logger.Log($"Curret Client dist : {clientDistance}");
             _logger.Log($"Current Server dist : {serverDistance}");
-            _logger.Log($"Diff client - server :{clientDistance - serverDistance}");
+            _logger.Log($"Diff client - server :{clientDistance - serverDistance}");*/
             client.Player.UpdateClientPosition(current, currentZ);
         }
     }

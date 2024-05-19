@@ -20,7 +20,7 @@ namespace Core.Game.Contorller
         {
             _logger.Log($"[ENTER_WORLD] received from :", client);
             var player = client.Player;
-            var character = player.CharacterDetails;
+            var character = player;
             client.SendData(OutPacketFactory.BuildMockUserInfo(client, player));
             client.SendData(OutPacketFactory.BuildChangeMoveType(character.Info.ObjectId));
             client.SendData(OutPacketFactory.BuildQuestList());
@@ -62,6 +62,11 @@ namespace Core.Game.Contorller
             {
                 client.SendData(OutPacketFactory.BuildCharInfo(player));
                 client.SendData(OutPacketFactory.BuildRelationChanged(player));
+                if (player.IsMoving)
+                {
+                    client.SendData(OutPacketFactory.BuildOutMoveToLocation(
+                        player, player.Target, (int)player.TargetZ));
+                }
             }
         }
     }

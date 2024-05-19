@@ -34,6 +34,7 @@ namespace Core.Game
         {
             _connectionListener.Start();
             _logger.Log($"Listening on : {_connectionListener.LocalEndpoint}");
+            _worldPlayers.AddGhost(_characterRepository.BuildGhost());
         }
 
         public void Stop() => _connectionListener.Stop();

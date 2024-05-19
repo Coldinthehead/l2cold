@@ -1,7 +1,7 @@
 ﻿namespace Core.Game.Data;
 
 
-public struct CharacterSlotInfo
+public struct CharacterInfo
 {
     public string Name;
     public int ObjectId;
@@ -23,9 +23,9 @@ public struct CharacterSlotInfo
     public int CurrentClass;
 
 
-    public static CharacterSlotInfo BuildMockCharacterSlot()
+    public static CharacterInfo BuildMockCharacterSlot()
     {
-        var info = new CharacterSlotInfo();
+        var info = new CharacterInfo();
         info.Name = "Hello world";
         info.ObjectId = 0;
         info.ClanId = 0;
