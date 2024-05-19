@@ -10,6 +10,15 @@ namespace Core.Game
         private Dictionary<GameClient, Player> _onlinePlayers = new();
         private List<ICharacter> _activePlayers = new();
 
+
+        public void Tick(float dt)
+        {
+            foreach (var p in _activePlayers)
+            {
+                p.Update(dt);
+            }
+        }
+
         public void AddPlayer(GameClient client, Player player)
         {
             _onlinePlayers[client] = player;
@@ -43,14 +52,7 @@ namespace Core.Game
             return _activePlayers;
         }
 
-        internal void Tick(float dt)
-        {
-            foreach (var p in _activePlayers)
-            {
-                p.Update(dt);
-            }
-        }
-
+     
         public void AddGhost(GhostPlayer ghostPlayer)
         {
             _activePlayers.Add(ghostPlayer);
@@ -61,6 +63,18 @@ namespace Core.Game
         {
             var packet = OutPacketFactory.BuildOutMoveToLocation(character, character.Target,(int) character.TargetZ);
             BroadcastPacket(packet);
+        }
+
+        public ICharacter FindById(int objectId)
+        {
+            foreach (var character in _activePlayers)
+            {
+                if (character.ObjectId == objectId)
+                {
+                    return character;
+                }
+            }
+            return null;
         }
     }
 }

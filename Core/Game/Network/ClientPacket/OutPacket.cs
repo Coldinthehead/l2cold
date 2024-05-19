@@ -26,6 +26,7 @@ namespace Core.Game.Network.ClientPacket
         public const int SKILL_CD = 0xC1;
         public const int RELATION_CHANGED = 0xCE;
         public const int NET_PING = 0xD3;
+        public const int MY_TARGET_SELECTED = 0xA6;
 
     }
 }

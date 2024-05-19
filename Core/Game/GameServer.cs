@@ -123,10 +123,13 @@ namespace Core.Game
                     new SkillCdController().Run(client, buffer);
                     break;
                 case InPacket.ACTION:
-                    new ActionController().Run(client, buffer);
+                    new ActionController(_worldPlayers).Run(client, buffer);
                     break;
                 case 0xA8:
                     new NetPingController().Run(client, buffer);
+                    break;
+                case 0x0A:
+                    new AttackRequestController(_worldPlayers).Run(client, buffer);
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");

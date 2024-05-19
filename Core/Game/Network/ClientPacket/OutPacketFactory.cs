@@ -2,6 +2,7 @@
 using Core.Game.World.Actor;
 using Core.Math;
 using Core.Utils.NetworkBuffers;
+using Org.BouncyCastle.Bcpg;
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -330,14 +331,21 @@ namespace Core.Game.Network.ClientPacket
 
         public static byte[] BuildQuestList() => new WriteableBuffer().WriteByte(OutPacket.QUEST_LIST).WriteInt(0).toByteArray();
 
-        public static byte[] BuildTargetSelected(Player player)
+        public static byte[] BuildMyTargetSelected(ICharacter target)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(OutPacket.MY_TARGET_SELECTED).WriteInt(target.ObjectId).WriteShort(0);
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildTargetSelected(ICharacter player)
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.TARGET_SELECTED)
                 .WriteInt(player.Info.ObjectId)
                 .WriteInt(1)
-                .WriteDouble(player.ClientPosition.x)
-                .WriteDouble(player.ClientPosition.y)
+                .WriteDouble(player.Origin.x)
+                .WriteDouble(player.Origin.y)
                 .WriteDouble(player.OriginZ);
 
             return packet.toByteArray();
@@ -598,6 +606,20 @@ namespace Core.Game.Network.ClientPacket
         public static byte[] BuildNetPing(GameClient client)
         {
             return new WriteableBuffer().WriteByte(OutPacket.NET_PING).WriteInt(145).toByteArray();
+        }
+
+        internal static byte[] BuildMoveToPawn(ICharacter player, ICharacter target, int distance)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x60)
+                .WriteInt(player.ObjectId)
+                .WriteInt(target.ObjectId)
+                .WriteInt(distance)
+                .WriteInt((int)player.Origin.x)
+                .WriteInt((int)player.Origin.y)
+                .WriteInt((int)player.OriginZ);
+
+            return packet.toByteArray();
         }
     }
 }

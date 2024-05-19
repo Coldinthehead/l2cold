@@ -69,6 +69,8 @@ namespace Core.Game.World.Actor
 
         public bool IsMoving => _movement.IsMoving;
 
+        public ICharacter CharacterTarget { get;  set; }
+
         private MovementComponent _movement;
         public Player(int objectId, Vec2 position, float zPosition, GameCharacter details)
         {
@@ -108,6 +110,11 @@ namespace Core.Game.World.Actor
         public void Update(float dt)
         {
             _movement.Tick(dt);
+        }
+
+        public void StartFollowTarget(ICharacter target)
+        {
+            
         }
     }
 }
