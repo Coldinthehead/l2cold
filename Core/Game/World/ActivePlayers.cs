@@ -1,9 +1,9 @@
 ﻿using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World.Actor;
-using Core.Math;
+using Core.Utils.Math;
 
-namespace Core.Game
+namespace Core.Game.World
 {
     public class ActivePlayers
     {
@@ -52,7 +52,7 @@ namespace Core.Game
             return _activePlayers;
         }
 
-     
+
         public void AddGhost(GhostPlayer ghostPlayer)
         {
             _activePlayers.Add(ghostPlayer);
@@ -61,7 +61,7 @@ namespace Core.Game
 
         private void OnGhostMovement(IMovable character)
         {
-            var packet = OutPacketFactory.BuildOutMoveToLocation(character, character.Target,(int) character.TargetZ);
+            var packet = OutPacketFactory.BuildOutMoveToLocation(character, character.Target, (int)character.TargetZ);
             BroadcastPacket(packet);
         }
 

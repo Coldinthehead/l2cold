@@ -1,7 +1,7 @@
-﻿using Core.Security.Crypt;
+﻿using Core.Common.Security.Crypt;
 using Core.Utils;
 
-namespace Core.Game.Network
+namespace Core.Game.Network.Security
 {
     public class GameCrypt : IDataCrypter
     {
@@ -45,15 +45,15 @@ namespace Core.Game.Network
             }
 
             // Shift key.
-            int old = _inKey[8] ;
-            old |= (_inKey[9] << 8);
-            old |= (_inKey[10] << 16);
-            old |= (_inKey[11] << 24);
+            int old = _inKey[8];
+            old |= _inKey[9] << 8;
+            old |= _inKey[10] << 16;
+            old |= _inKey[11] << 24;
             old += size;
-            _inKey[8] = (byte)(old);
-            _inKey[9] = (byte)((old >> 8));
-            _inKey[10] = (byte)((old >> 16));
-            _inKey[11] = (byte)((old >> 24));
+            _inKey[8] = (byte)old;
+            _inKey[9] = (byte)(old >> 8);
+            _inKey[10] = (byte)(old >> 16);
+            _inKey[11] = (byte)(old >> 24);
         }
 
         public void CryptInPlace(byte[] data, int offset, int size)
@@ -67,15 +67,15 @@ namespace Core.Game.Network
             }
 
             // Shift key.
-            int old = _outKey[8] ;
-            old |= (_outKey[9] << 8) ;
-            old |= (_outKey[10] << 16) ;
-            old |= (_outKey[11] << 24);
+            int old = _outKey[8];
+            old |= _outKey[9] << 8;
+            old |= _outKey[10] << 16;
+            old |= _outKey[11] << 24;
             old += size;
-            _outKey[8] = (byte)(old );
-            _outKey[9] = (byte)((old >> 8) );
-            _outKey[10] = (byte)((old >> 16) );
-            _outKey[11] = (byte)((old >> 24) );
+            _outKey[8] = (byte)old;
+            _outKey[9] = (byte)(old >> 8);
+            _outKey[10] = (byte)(old >> 16);
+            _outKey[11] = (byte)(old >> 24);
         }
     }
 
@@ -83,12 +83,12 @@ namespace Core.Game.Network
     {
         public void CryptInPlace(byte[] data, int offset, int size)
         {
-            
+
         }
 
         public void DecryptInPlace(byte[] data, int offset, int size)
         {
-            
+
         }
     }
 }

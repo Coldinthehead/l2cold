@@ -1,5 +1,5 @@
-﻿using Core.Game.Network;
-using Core.Utils.NetworkBuffers;
+﻿using Core.Common.Network;
+using Core.Game.Network;
 
 namespace Core.Game.Contorller
 {

@@ -1,6 +1,6 @@
 ﻿using Core.Utils;
 
-namespace Core.Game
+namespace Core.Game.Services
 {
     public class ObjectIdFactory
     {

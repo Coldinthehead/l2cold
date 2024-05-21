@@ -1,9 +1,9 @@
-﻿
-using Core.Game.Data;
+﻿using Core.Game.Data;
+using Core.Game.Services;
 using Core.Game.World.Actor;
 using Core.Math;
 
-namespace Core.Game
+namespace Core.Game.Repository
 {
     public class PlayerRepository
     {
@@ -34,11 +34,11 @@ namespace Core.Game
             data.Info.ObjectId = _idFactory.GetFreeId();
             data.Info.Name = "Ghost" + data.Info.ObjectId;
 
-            var ghost =  new GhostPlayer(data.Info.ObjectId, new Math.Vec2(data.x, data.y)
+            var ghost = new GhostPlayer(data.Info.ObjectId, new Math.Vec2(data.x, data.y)
                 , (float)data.z, data);
 
             ghost.AddMoveNode(new Math.Vec2(data.x, data.y));
-            ghost.AddMoveNode(new Vec2(7835,7208));
+            ghost.AddMoveNode(new Vec2(7835, 7208));
             ghost.AddMoveNode(new Vec2(8469, 7328));
             ghost.AddMoveNode(new Vec2(7052, 7393));
 

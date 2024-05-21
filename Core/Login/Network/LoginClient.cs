@@ -1,18 +1,22 @@
-﻿using System.Net.Sockets;
-using Core.Security;
-using Core.Utils.NetworkBuffers;
+﻿using Core.Common.Network;
+using Core.Common.Security;
+using Core.Login.Security;
+using System.Net;
+using System.Net.Sockets;
 
-
-namespace Core.Login
+namespace Core.Login.Network
 {
-    public class NetClient
+    public class LoginClient : IClient
     {
+
+        public EndPoint RemoteEndPoint => _connection.Client.RemoteEndPoint;
+
         public SessionKeys SKeys => _sessionKeys;
-        private readonly TcpClient _connection;
         private readonly ClientCrypt _crypt;
+        private readonly TcpClient _connection;
         private SessionKeys _sessionKeys;
 
-        public NetClient(TcpClient connection, ClientCrypt crypt)
+        public LoginClient(TcpClient connection, ClientCrypt crypt)
         {
             _connection = connection;
             _crypt = crypt;

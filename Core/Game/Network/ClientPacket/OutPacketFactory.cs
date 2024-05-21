@@ -1,8 +1,7 @@
 ﻿using Core.Common.Services;
 using Core.Game.World.Actor;
-using Core.Math;
-using Core.Utils.NetworkBuffers;
-using Org.BouncyCastle.Bcpg;
+using Core.Network;
+using Core.Utils.Math;
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -77,9 +76,6 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt((int)origin.x)
                 .WriteInt((int)origin.y)
                 .WriteInt((int)player.OriginZ);
-
-            Console.WriteLine("Building packet for player with id" + player.ObjectId);
-
             return movePacket.toByteArray();
         }
 

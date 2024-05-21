@@ -4,7 +4,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
-namespace Core.Security.Crypt
+namespace Core.Common.Security.Crypt
 {
     public class ScrambledKeyPair
     {

@@ -1,7 +1,5 @@
-﻿
-using Core.Game.Data;
-using Core.Game.Network.ClientPacket;
-using Core.Math;
+﻿using Core.Game.Data;
+using Core.Utils.Math;
 
 namespace Core.Game.World.Actor
 {

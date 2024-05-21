@@ -1,4 +1,4 @@
-﻿namespace Core.Logs
+﻿namespace Core.Utils.Logs
 {
     public class Logger<T>
     {
@@ -7,7 +7,7 @@
 
         public Logger()
         {
-            _name = this.GetType().GenericTypeArguments[0].Name;
+            _name = GetType().GenericTypeArguments[0].Name;
         }
 
         public void Log(string msg)

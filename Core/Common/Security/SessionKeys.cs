@@ -1,6 +1,6 @@
 ﻿using Core.Utils;
 
-namespace Core.Security
+namespace Core.Common.Security
 {
     public class SessionKeys
     {

@@ -1,8 +1,8 @@
-﻿using Core.Security.Crypt;
+﻿using Core.Common.Security.Crypt;
 using Core.Utils;
 using Org.BouncyCastle.Crypto.Engines;
 
-namespace Core.Login
+namespace Core.Login.Security
 {
     public class ClientCrypt
     {
@@ -27,7 +27,9 @@ namespace Core.Login
 
         public void GenerateSessionId()
         {
-            _sessionId = ServerRandom.Next(50, 250) * ServerRandom.Next(25, 255) * ServerRandom.Next(1, 13) + ServerRandom.Next(100000, 10000000);
+            _sessionId = ServerRandom.Next(50, 250) 
+                * ServerRandom.Next(25, 255) 
+                * ServerRandom.Next(1, 13) + ServerRandom.Next(100000, 10000000);
         }
 
         public byte[] DecryptBlockRSA(byte[] data)

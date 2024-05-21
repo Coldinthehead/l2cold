@@ -1,7 +1,7 @@
 ﻿
 using System.Text;
 
-namespace Core.Utils.NetworkBuffers
+namespace Core.Common.Network
 {
     public class ReadableBuffer
     {
@@ -37,15 +37,15 @@ namespace Core.Utils.NetworkBuffers
 
         public int ReadShort()
         {
-            return  _buffer[_position++]
-                | (_buffer[_position++] << 8) ;
+            return _buffer[_position++]
+                | _buffer[_position++] << 8;
         }
 
         internal string ReadString()
         {
             var sb = new StringBuilder();
             int charId;
-            while ( (charId = ReadShort()) != 0)
+            while ((charId = ReadShort()) != 0)
             {
                 sb.Append((char)charId);
             }

@@ -1,26 +1,24 @@
-﻿using Core.Logs;
-using Core.Security;
+﻿using Core.Common.Network;
+using Core.Common.Security;
 using Core.Utils;
-using Core.Utils.NetworkBuffers;
+using Core.Utils.Logs;
 using System.Text;
 
-namespace Core.Login
+namespace Core.Login.Network
 {
-
     enum AuthenticationResult
     {
         InvalidLogin,
         InvalidPassword,
         Succes,
         Banned,
-
     }
 
-    public class PacketHandler
+    public class LoginPacketHandler : IPacketHadnler<LoginClient>
     {
-        private readonly Logger<PacketHandler> _logger = Logger<PacketHandler>.BuildLogger();
+        private readonly Logger<LoginPacketHandler> _logger = Logger<LoginPacketHandler>.BuildLogger();
 
-        public void HandlePacket(NetClient client, ReadableBuffer buffer)
+        public void HandlePacket(LoginClient client, ReadableBuffer buffer)
         {
             int opCode = buffer.ReadByte();
             switch (opCode)
@@ -49,8 +47,8 @@ namespace Core.Login
 
                         byte[] id = ExtractId(dec);
                         byte[] pw = ExtractPw(dec);
-                        _logger.Log($"id : {ASCIIEncoding.ASCII.GetString(id)}");
-                        _logger.Log($"pw : {ASCIIEncoding.ASCII.GetString(pw)}");
+                        _logger.Log($"id : {Encoding.ASCII.GetString(id)}");
+                        _logger.Log($"pw : {Encoding.ASCII.GetString(pw)}");
 
                         var authResult = ProcessAuthentication(id, pw);
                         switch (authResult)
@@ -142,7 +140,6 @@ namespace Core.Login
                 ServerType = 1;
             }
         }
-
         private WriteableBuffer BuildServerList()
         {
             List<GameServerData> servers = new();
@@ -151,7 +148,7 @@ namespace Core.Login
             buffer.WriteByte(0x04)
                 .WriteByte(servers.Count) // Servers count;
                 .WriteByte(1); // Last server id
-            foreach( var server in servers ) 
+            foreach (var server in servers)
             {
                 buffer.WriteByte(server.ID)
 
@@ -173,7 +170,7 @@ namespace Core.Login
             }
             buffer.WriteShort(0); //end of servers
             buffer.WriteShort(0); // characters on servers;
-            return buffer; 
+            return buffer;
 
         }
 
@@ -195,5 +192,6 @@ namespace Core.Login
             var pwEnd = 17 + 16;
             return dec.Slice(pwStart, pwEnd);
         }
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Core.Game.Data;
-using Core.Math;
+using Core.Utils.Math;
 
 namespace Core.Game.World.Actor
 {

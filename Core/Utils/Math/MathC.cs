@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Math
+namespace Core.Utils.Math
 {
     public struct Vec2
     {
@@ -35,8 +35,8 @@ namespace Core.Math
         {
             return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
         }
-    
-        public static float Distance(Vec2 a , Vec2 b)
+
+        public static float Distance(Vec2 a, Vec2 b)
         {
             var dir = new Vec2(a.x - b.x, a.y - b.y);
             var dirLen = dir.x * dir.x + dir.y * dir.y;

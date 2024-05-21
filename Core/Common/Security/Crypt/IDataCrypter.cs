@@ -1,4 +1,4 @@
-﻿namespace Core.Security.Crypt
+﻿namespace Core.Common.Security.Crypt
 {
     public interface IDataCrypter
     {

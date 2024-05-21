@@ -1,13 +1,11 @@
-﻿
-
-namespace Core.Utils.NetworkBuffers
+﻿namespace Core.Common.Network
 {
 
     internal class WriteableBuffer
     {
         private List<byte> _data = new();
 
- 
+
         private void WriteRaw(byte b)
         {
             _data.Add(b);
@@ -48,7 +46,7 @@ namespace Core.Utils.NetworkBuffers
             arr[1] = (byte)(len >> 8);
             for (int i = 0; i < _data.Count; i++)
             {
-                arr[2+i] = _data[i];
+                arr[2 + i] = _data[i];
             }
             return arr;
         }

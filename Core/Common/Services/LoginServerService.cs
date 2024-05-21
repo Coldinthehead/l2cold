@@ -1,5 +1,5 @@
-﻿using Core.Login;
-using Core.Security;
+﻿using Core.Common.Security;
+using Core.Login;
 using System;
 using System.Collections.Generic;
 using System.Linq;
