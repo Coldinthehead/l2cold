@@ -2,14 +2,16 @@
 {
     public abstract class Component
     {
-        public int ObjectId => gameObject.ObjectId;
-        protected readonly GameObject gameObject;
+        public int ObjectId => _gameObject.ObjectId;
+        public GameObject gameObject => _gameObject;
 
-        public Component(GameObject gameObject)
+        private GameObject _gameObject;
+
+        public void OnAdd(GameObject gameObject)
         {
-            this.gameObject = gameObject;
+            _gameObject = gameObject;
+            Awake();
         }
-
         public virtual void Awake()
         {
 

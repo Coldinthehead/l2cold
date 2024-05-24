@@ -1,6 +1,7 @@
 ﻿using Core.Common.Network;
 using Core.Common.Security;
 using Core.Common.Security.Crypt;
+using Core.Engine;
 using Core.Game.World.Actor;
 using Core.Utils;
 using System.Net.Sockets;
@@ -12,7 +13,7 @@ public class GameClient : IClient
     private readonly TcpClient _connection;
     private IDataCrypter _cryptInterface;
     public SessionKeys Skeys => _sKeys;
-    public Player Player { get; set; }
+    public GameObject Player { get; set; }
     public int Ping { get; set; }
 
     private SessionKeys _sKeys;
@@ -69,6 +70,6 @@ public class GameClient : IClient
     {
         return Player == null ?
          _connection.Client.RemoteEndPoint.ToString()
-         : Player.Info.Name;
+         : Player.ObjectId.ToString();
     }
 }

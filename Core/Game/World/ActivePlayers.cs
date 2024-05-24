@@ -1,31 +1,32 @@
-﻿using Core.Game.Network;
+﻿using Core.Engine;
+using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World.Actor;
-using Core.Utils.Math;
+using Core.Game.World.Components;
 
 namespace Core.Game.World
 {
     public class ActivePlayers
     {
-        private Dictionary<GameClient, Player> _onlinePlayers = new();
+        private Dictionary<GameClient, GameObject> _onlinePlayers = new();
         private List<ICharacter> _activePlayers = new();
 
-
+      
         public void Tick(float dt)
         {
-            foreach (var p in _activePlayers)
+            foreach (var p in _onlinePlayers.Values)
             {
                 p.Update(dt);
             }
         }
 
-        public void AddPlayer(GameClient client, Player player)
+        public void AddPlayer(GameClient client, GameObject player)
         {
             _onlinePlayers[client] = player;
-            _activePlayers.Add(player);
+            _activePlayers.Add(player.GetComponent<PlayerState>());
         }
 
-        public Player GetPlayer(GameClient client)
+        public GameObject GetPlayer(GameClient client)
         {
             return _onlinePlayers[client];
         }
@@ -38,26 +39,16 @@ namespace Core.Game.World
             }
         }
 
-        public void BroadcastMoveToLocation(Player player, Vec2 target, float zTarget)
-        {
-            foreach (var client in _onlinePlayers.Keys)
-            {
-                var packet = OutPacketFactory.BuildOutMoveToLocation(player, target, (int)zTarget);
-                client.SendData(packet);
-            }
-        }
-
         public IEnumerable<ICharacter> GetOnlinePlayers()
         {
             return _activePlayers;
         }
 
-
-        public void AddGhost(GhostPlayer ghostPlayer)
+  /*      public void AddGhost(GhostPlayer ghostPlayer)
         {
             _activePlayers.Add(ghostPlayer);
             ghostPlayer.OnMovement += OnGhostMovement;
-        }
+        }*/
 
         private void OnGhostMovement(IMovable character)
         {

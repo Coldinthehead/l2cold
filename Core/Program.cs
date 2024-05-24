@@ -9,6 +9,7 @@ using Core.Game.Network;
 using Core.Game.World;
 using Core.Game.Services;
 using Core.Game.Repository;
+using Core.Game.World.Factory;
 
 
 namespace Core
@@ -28,12 +29,13 @@ namespace Core
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
                 , loginService
                 , new GameClientFactory()
-                , new GamePacketHandler(loginService, activePlayers, idFactory, playerRepos));
-            game.OnStart += () =>
+                , new GamePacketHandler(loginService, activePlayers, idFactory, playerRepos
+                , new PlayerFactory(activePlayers)));
+       /*     game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
                 activePlayers.AddGhost(playerRepos.BuildGhost());
-            };
+            };*/
             var time = new Stopwatch();
             game.Start();
             login.Start();

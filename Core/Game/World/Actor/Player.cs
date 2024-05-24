@@ -1,109 +1,10 @@
 ﻿using Core.Game.Data;
 using Core.Utils.Math;
-
+/*
 namespace Core.Game.World.Actor
-{
+{*/
 
-    public class MovementComponent
-    {
-        public Vec2 Position;
-        public Vec2 Target => _moveTarget;
-
-        public bool IsMoving => _moveDistance > 0;
-        private CharacterStats _stats;
-        private Vec2 _moveDirection;
-        private Vec2 _moveTarget;
-        private float _moveDistance;
-        private float _moveTimer;
-
-        public const float ACCELERATION_TIME = 0.5f;
-
-        public MovementComponent(CharacterStats stats)
-        {
-            _stats = stats;
-            _moveTarget = new Vec2(0, 0);
-        }
-
-        public void Move(Vec2 target, float zTarget)
-        {
-            _moveTarget = target;
-            _moveDirection = Vec2.Direction(Position, target);
-            _moveDistance = Vec2.Distance(Position, target);
-        }
-
-        public void Stop()
-        {
-            _moveTimer = 0;
-        }
-        public void Tick(float dt)
-        {
-            if (_moveDistance > 0)
-            {
-                _moveTimer += dt;
-                var dir = _moveDirection;
-                var step = dt * (_moveTimer >= ACCELERATION_TIME ? _stats.RunSpd
-                                                : _stats.WalkSpd);
-                dir *= step;
-                Position += dir;
-                _moveDistance -= step;
-                if (_moveDistance <= 0)
-                {
-                    _moveDistance = 0;
-                    Position = _moveTarget;
-                    _moveTimer = 0;
-                }
-            }
-        }
-    }
-
-    public class FollowTargetComponent
-    {
-        public event Action<ICharacter> OnTargetReached;
-        private readonly MovementComponent _movement;
-
-        public ICharacter FollowTarget;
-        private int _followDistance;
-
-        private float _currentDistance;
-
-        public FollowTargetComponent(MovementComponent movement)
-        {
-            _movement = movement;
-        }
-
-        public void Update(float dt)
-        {
-            var dist = Vec2.Distance(_movement.Position, FollowTarget.Origin);
-            if (dist - _followDistance >= 0)
-            {
-                _movement.Move(FollowTarget.Origin, FollowTarget.OriginZ);
-                _movement.Tick(dt);
-            }
-            else
-            {
-                var dir = Vec2.Direction(_movement.Position, FollowTarget.Origin);
-                var compStep = dir * (_followDistance - 10);
-                var finalPos = FollowTarget.Origin - compStep;
-                _movement.Position = finalPos;
-                _movement.Stop();
-                OnTargetReached?.Invoke(FollowTarget);
-            }
-        }
-
-        public void BeakState()
-        {
-            OnTargetReached?.Invoke(FollowTarget);
-        }
-
-        public void SetTarget(ICharacter target, int distance)
-        {
-            FollowTarget = target;
-            _followDistance = distance;
-            _currentDistance = Vec2.Distance(_movement.Position, target.Origin);
-        }
-    }
-
-    public class Player : IMovable, ICharacter
+  /*  public class Player : IMovable, ICharacter
     {
         public event Action<Player> OnForceStopMove;
         enum BehaviourState
@@ -144,12 +45,8 @@ namespace Core.Game.World.Actor
             Info = details.Info;
             Stats = details.Stats;
             GearObjectId = details.GearObjectId;
-            GearItemId = details.GeartItemId;
-            _movement = new MovementComponent(Stats)
-            {
-                Position = position,
-
-            };
+            GearItemId = details.GearItemId;
+            _movement = new MovementComponent(Stats);
             _followTarget = new FollowTargetComponent(_movement);
             _currentBehaviour = BehaviourState.idle;
             _followTarget.OnTargetReached += OnFolowTargetReached;
@@ -199,7 +96,7 @@ namespace Core.Game.World.Actor
             {
                 case BehaviourState.MoveToPoint:
                     {
-                        _movement.Tick(dt);
+                        _movement.Update(dt);
 
                     }
                     break;
@@ -223,6 +120,6 @@ namespace Core.Game.World.Actor
         {
             _currentBehaviour = BehaviourState.idle;
             OnForceStopMove?.Invoke(this);
-        }
-    }
-}
+        }*/
+/*    }
+}*/

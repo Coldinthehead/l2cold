@@ -2,13 +2,14 @@
 using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World;
-using Core.Math;
+using Core.Utils.Math;
 using Core.Utils.Logs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Game.World.Actor;
 
 namespace Core.Game.Contorller
 {
@@ -31,7 +32,8 @@ namespace Core.Game.Contorller
             var targetZ = message.ReadInt();
             int attackId = message.ReadByte();
 
-            var target = client.Player.CharacterTarget;
+            /*var target = client.Player.CharacterTarget;*/
+            ICharacter target = null;
             if (target == null)
             {
                 _worldPlayers.FindById(objId);
@@ -41,11 +43,11 @@ namespace Core.Game.Contorller
                 client.SendData(OutPacketFactory.BuildActionFailed());
                 return;
             }
-
+/*
             var distance = 50;
             client.Player.StartFollowTarget(target, distance);
             var packet = OutPacketFactory.BuildMoveToPawn(client.Player, target, distance);
-            _worldPlayers.BroadcastPacket(packet);
+            _worldPlayers.BroadcastPacket(packet);*/
             
         }
     }

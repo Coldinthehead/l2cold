@@ -18,7 +18,7 @@ namespace Core.Game.World.Actor
         public CharacterInfo Info { get; }
         public string Title { get; }
         public CharacterGear GearItemId { get; }
-
+ 
         public CharacterStats Stats { get; }
 
         public bool IsMoving { get; }

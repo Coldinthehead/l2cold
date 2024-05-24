@@ -1,13 +1,13 @@
 ﻿using Core.Game.Data;
 using Core.Game.Services;
 using Core.Game.World.Actor;
-using Core.Math;
+using Core.Utils.Math;
 
 namespace Core.Game.Repository
 {
     public class PlayerRepository
     {
-        private readonly List<Player> _savedPlayers = new List<Player>();
+        private readonly List<GameCharacterModel> _savedPlayers = new List<GameCharacterModel>();
 
         private readonly ObjectIdFactory _idFactory;
 
@@ -18,43 +18,40 @@ namespace Core.Game.Repository
                 _savedPlayers.Add(BuildPlayer());
         }
 
-        public Player LoadCharacter(int charId)
+        public GameCharacterModel LoadCharacter(int charId)
         {
             return _savedPlayers[charId];
         }
 
-        public List<Player> LoadCharacterList()
+        public List<GameCharacterModel> LoadCharacterList()
         {
             return _savedPlayers;
         }
 
-        public GhostPlayer BuildGhost()
+  /*      public GhostPlayer BuildGhost()
         {
-            var data = GameCharacter.BuildMockCharacter();
+            var data = GameCharacterModel.BuildMockCharacter();
             data.Info.ObjectId = _idFactory.GetFreeId();
             data.Info.Name = "Ghost" + data.Info.ObjectId;
 
-            var ghost = new GhostPlayer(data.Info.ObjectId, new Math.Vec2(data.x, data.y)
+            var ghost = new GhostPlayer(data.Info.ObjectId, new Vec2(data.x, data.y)
                 , (float)data.z, data);
 
-            ghost.AddMoveNode(new Math.Vec2(data.x, data.y));
+            ghost.AddMoveNode(new Vec2(data.x, data.y));
             ghost.AddMoveNode(new Vec2(7835, 7208));
             ghost.AddMoveNode(new Vec2(8469, 7328));
             ghost.AddMoveNode(new Vec2(7052, 7393));
 
             return ghost;
-        }
+        }*/
 
-        private Player BuildPlayer()
+        private GameCharacterModel BuildPlayer()
         {
-            var characterData = GameCharacter.BuildMockCharacter();
+            var characterData = GameCharacterModel.BuildMockCharacter();
             characterData.Info.ObjectId = _idFactory.GetFreeId();
             characterData.Info.Name = "Hello" + characterData.Info.ObjectId;
 
-            return new Player(characterData.Info.ObjectId
-                , new Vec2(characterData.x, characterData.y)
-                , (float)characterData.z
-                , characterData);
+            return characterData;
 
         }
     }

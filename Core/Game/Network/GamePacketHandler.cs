@@ -5,6 +5,7 @@ using Core.Game.Network.ClientPacket;
 using Core.Game.Repository;
 using Core.Game.Services;
 using Core.Game.World;
+using Core.Game.World.Factory;
 using Core.Utils;
 using Core.Utils.Logs;
 
@@ -19,16 +20,19 @@ namespace Core.Game.Network
         private readonly ActivePlayers _worldPlayers;
         private readonly ObjectIdFactory _idFactory = new();
         private readonly PlayerRepository _characterRepository;
+        private readonly PlayerFactory _playerFactory;
 
         public GamePacketHandler(LoginServerService loginServer
             , ActivePlayers worldPlayers
             , ObjectIdFactory idFactory
-            , PlayerRepository playerRepository)
+            , PlayerRepository playerRepository
+            , PlayerFactory playerFactory)
         {
             _loginServer = loginServer;
             _worldPlayers = worldPlayers;
             _idFactory = idFactory;
             _characterRepository = playerRepository;
+            _playerFactory = playerFactory;
         }
 
         public void HandlePacket(GameClient client, ReadableBuffer message)
@@ -44,7 +48,7 @@ namespace Core.Game.Network
                     new RequestAuthController(_loginServer, _characterRepository).Run(client, message);
                     break;
                 case InPacket.CHARACTER_SELECTED:
-                    new CharacterSelectedController(_characterRepository).Run(client, message);
+                    new CharacterSelectedController(_characterRepository, _playerFactory).Run(client, message);
                     break;
                 case InPacket.EX_PACKET:
                     _logger.Log($"[EX_PACKET] received from :", client);

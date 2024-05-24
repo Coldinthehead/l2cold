@@ -3,7 +3,7 @@ using Core.Utils.Math;
 
 namespace Core.Game.World.Actor
 {
-    public class GhostPlayer : IMovable , ICharacter
+  /*  public class GhostPlayer : IMovable , ICharacter
     {
         public event Action<IMovable> OnMovement;
         private MovementComponent _movement;
@@ -24,14 +24,14 @@ namespace Core.Game.World.Actor
         private int _pathIndex = 0;
         private List<Vec2> _path = new List<Vec2>();
 
-        public GhostPlayer(int objectId, Vec2 position, float zPosition, GameCharacter details)
+        public GhostPlayer(int objectId, Vec2 position, float zPosition, GameCharacterModel details)
         {
             ObjectId = objectId;
             Title = details.Title;
             Info = details.Info;
             Stats = details.Stats;
             GearObjectId = details.GearObjectId;
-            GearItemId = details.GeartItemId;
+            GearItemId = details.GearItemId;
             _movement = new MovementComponent(Stats)
             {
                 Position = position,
@@ -54,7 +54,7 @@ namespace Core.Game.World.Actor
         public void Update(float dt)
         {
             if (_movement.IsMoving)
-                _movement.Tick(dt);
+                _movement.Update(dt);
             else
             {
                 _pathIndex++;
@@ -63,5 +63,5 @@ namespace Core.Game.World.Actor
                 OnMovement?.Invoke(this);
             }
         }
-    }
+    }*/
 }

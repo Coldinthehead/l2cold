@@ -2,7 +2,7 @@
 using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World;
-using Core.Math;
+using Core.Utils.Math;
 
 namespace Core.Game.Contorller
 {
@@ -25,9 +25,9 @@ namespace Core.Game.Contorller
 
             if (character != null)
             {
-                client.Player.CharacterTarget = character;
+               /* client.Player.CharacterTarget = character;
                 var packet = OutPacketFactory.BuildMyTargetSelected(character);
-                client.SendData(packet);
+                client.SendData(packet);*/
             }
             else
                 client.SendData(OutPacketFactory.BuildActionFailed());

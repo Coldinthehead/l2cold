@@ -1,6 +1,5 @@
 ﻿namespace Core.Engine
 {
-
     public class GameObject
     {
         public int ObjectId { get; private set; }
@@ -31,15 +30,30 @@
 
         public void AddComponent(Component component)
         {
-            _components[component.GetType()] = component;
-            component.Awake();
+            PutAbstractions(component);
+            component.OnAdd(this);
         }
 
         public void AddComponent(UpdatableComponent component)
         {
-            _components[component.GetType()] = component;
             _updatableComponents.Add(component);
-            component.Awake();
+            PutAbstractions(component);
+            component.OnAdd(this);
+        }
+        
+        private void PutAbstractions(Component component)
+        {
+            var interfaces = component.GetType().GetInterfaces();
+            foreach (var t in interfaces)
+            {
+                _components[t] = component;
+            }
+            var baseType = component.GetType();
+            while (baseType != typeof(Component) && baseType != null)
+            {
+                _components[baseType] = component;
+                baseType = baseType.BaseType;
+            }
         }
 
         public void Start()

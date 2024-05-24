@@ -1,20 +1,22 @@
-﻿using Core.Common.Services;
+﻿using Core.Common.Network;
+using Core.Common.Services;
+using Core.Game.Data;
 using Core.Game.World.Actor;
-using Core.Network;
+using Core.Game.World.Components;
 using Core.Utils.Math;
 
 namespace Core.Game.Network.ClientPacket
 {
     public class OutPacketFactory
     {
-        public static byte[] BuildSelectedCharacter(int pkey2, Player player)
+        public static byte[] BuildSelectedCharacter(int pkey2, GameCharacterModel model)
         {
-            var info = player.Info;
+            var info = model.Info;
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_SELECTED)
                 .WriteString(info.Name)
                 .WriteInt(info.ObjectId)
-                .WriteString(player.Title)
+                .WriteString(model.Title)
                 .WriteInt(pkey2)
                 .WriteInt(info.ClanId)
                 .WriteInt(0)
@@ -22,9 +24,9 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(info.Race)
                 .WriteInt(info.CurrentClass)
                 .WriteInt(1) // is active ?
-                .WriteInt((int)player.ClientPosition.x)
-                .WriteInt((int)player.ClientPosition.y)
-                .WriteInt((int)player.OriginZ)
+                .WriteInt((int)model.x)
+                .WriteInt((int)model.y)
+                .WriteInt((int)model.z)
                 .WriteDouble(info.CurrentHealth)
                 .WriteDouble(info.CurrentMana)
                 .WriteInt(info.Sp)
@@ -79,7 +81,7 @@ namespace Core.Game.Network.ClientPacket
             return movePacket.toByteArray();
         }
 
-        public static byte[] BuildCharSelectInfo(LSAccountDetails accDetails, List<Player> characterList)
+        public static byte[] BuildCharSelectList(LSAccountDetails accDetails, List<GameCharacterModel> characterList)
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_LIST_INFO)
@@ -87,24 +89,24 @@ namespace Core.Game.Network.ClientPacket
 
             foreach (var player in characterList)
             {
-                var character = player.Info;
-                packet.WriteString(character.Name)
-                    .WriteInt(character.ObjectId)
+                var characterInfo = player.Info;
+                packet.WriteString(characterInfo.Name)
+                    .WriteInt(characterInfo.ObjectId)
                     .WriteString(accDetails.Id)
                     .WriteInt(accDetails.Skeys.Play1)
-                    .WriteInt(character.ClanId)
+                    .WriteInt(characterInfo.ClanId)
                     .WriteInt(0) // ?
-                    .WriteInt(character.Female ? 1 : 0)
-                    .WriteInt(character.Race)
-                    .WriteInt(character.BaseClass)
+                    .WriteInt(characterInfo.Female ? 1 : 0)
+                    .WriteInt(characterInfo.Race)
+                    .WriteInt(characterInfo.BaseClass)
                     .WriteInt(1)  // ?
                     .WriteInt(0).WriteInt(0).WriteInt(0) // xyz
-                    .WriteDouble(character.CurrentHealth)
-                    .WriteDouble(character.CurrentMana)
-                    .WriteInt(character.Sp)
-                    .WriteLong(character.Exp)
-                    .WriteInt(character.Level)
-                    .WriteInt(character.Karma);
+                    .WriteDouble(characterInfo.CurrentHealth)
+                    .WriteDouble(characterInfo.CurrentMana)
+                    .WriteInt(characterInfo.Sp)
+                    .WriteLong(characterInfo.Exp)
+                    .WriteInt(characterInfo.Level)
+                    .WriteInt(characterInfo.Karma);
                 for (int i = 0; i < 9; i++)
                     packet.WriteInt(0);
 
@@ -145,13 +147,13 @@ namespace Core.Game.Network.ClientPacket
                   .WriteInt(itemIds.HAIR)
                   .WriteInt(itemIds.FACE);
 
-                packet.WriteInt(character.HairStyle)
-                    .WriteInt(character.HairColor)
-                    .WriteInt(character.Face)
-                    .WriteDouble(character.MaxHealth)
-                    .WriteDouble(character.MaxMana)
+                packet.WriteInt(characterInfo.HairStyle)
+                    .WriteInt(characterInfo.HairColor)
+                    .WriteInt(characterInfo.Face)
+                    .WriteDouble(characterInfo.MaxHealth)
+                    .WriteDouble(characterInfo.MaxMana)
                     .WriteInt(0) // deleting time
-                    .WriteInt(character.CurrentClass)
+                    .WriteInt(characterInfo.CurrentClass)
                     .WriteInt(0) // is active
                     .WriteByte(0) // enchant effect
                     .WriteInt(0); // augmentation id
@@ -412,7 +414,7 @@ namespace Core.Game.Network.ClientPacket
             return packet.toByteArray();
         }
 
-        public static byte[] BuildMockUserInfo(GameClient client, Player player)
+        public static byte[] BuildMockUserInfo(GameClient client, PlayerState player)
         {
             var packet = new WriteableBuffer();
             var character = player;
@@ -420,8 +422,8 @@ namespace Core.Game.Network.ClientPacket
             var stats = character.Stats;
             packet.WriteByte(OutPacket.USER_INFO)
 
-                .WriteInt((int)player.ClientPosition.x)
-                .WriteInt((int)player.ClientPosition.y)
+                .WriteInt((int)player.Origin.x)
+                .WriteInt((int)player.Origin.y)
                 .WriteInt((int)player.OriginZ)
                 .WriteInt(0) // heading
                 .WriteInt(info.ObjectId)
@@ -452,7 +454,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(0) // max weight
                 .WriteInt(20); // is weapon equipped 20 no 40 yes
 
-            var itemIds = player.GearObjectId;
+            var itemIds = player. GearObjectId;
             packet.WriteInt(itemIds.D_HAIR)
                 .WriteInt(itemIds.R_EAR)
                 .WriteInt(itemIds.L_EAR)

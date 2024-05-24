@@ -1,8 +1,9 @@
 ﻿using Core.Common.Network;
+using Core.Engine;
 using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World;
-using Core.Game.World.Actor;
+using Core.Game.World.Components;
 using Core.Utils.Logs;
 
 namespace Core.Game.Contorller
@@ -21,9 +22,9 @@ namespace Core.Game.Contorller
         {
             _logger.Log($"[ENTER_WORLD] received from :", client);
             var player = client.Player;
-            var character = player;
-            client.SendData(OutPacketFactory.BuildMockUserInfo(client, player));
-            client.SendData(OutPacketFactory.BuildChangeMoveType(character.Info.ObjectId));
+            var playerState = player.GetComponent<PlayerState>();
+            client.SendData(OutPacketFactory.BuildMockUserInfo(client, playerState));
+            client.SendData(OutPacketFactory.BuildChangeMoveType(player.ObjectId));
             client.SendData(OutPacketFactory.BuildQuestList());
             client.SendData(OutPacketFactory.BuildMagicIconEffects());
             client.SendData(OutPacketFactory.BuildETCStatusUpdate());
@@ -35,20 +36,20 @@ namespace Core.Game.Contorller
             client.SendData(OutPacketFactory.BuildMacroList());
             client.SendData(OutPacketFactory.BuildClientTime());
             client.SendData(OutPacketFactory.BuildSkillList());
-            client.SendData(OutPacketFactory.BuildTargetSelected(player));
+            client.SendData(OutPacketFactory.BuildTargetSelected(playerState));
             client.SendData(OutPacketFactory.BuildSetCompasZone());
             client.SendData(OutPacketFactory.BuildActionFailed());
 
             SendNetPingPacket(client);
-            InformClientsWithPlayer(player);
+            InformClientsWithPlayer(playerState);
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);
 
-            player.OnForceStopMove += (player) => 
+        /*    player.OnForceStopMove += (player) => 
             {
                 var packet = OutPacketFactory.BuildStopMove(player);
                 _players.BroadcastPacket(packet);
-            };
+            };*/
         }
 
         private void SendNetPingPacket(GameClient client)
@@ -57,7 +58,7 @@ namespace Core.Game.Contorller
             client.SendData(pingPacket);
         }
 
-        private void InformClientsWithPlayer(Player player)
+        private void InformClientsWithPlayer(PlayerState player)
         {
             _players.BroadcastPacket(OutPacketFactory.BuildCharInfo(player));
             _players.BroadcastPacket(OutPacketFactory.BuildRelationChanged(player));

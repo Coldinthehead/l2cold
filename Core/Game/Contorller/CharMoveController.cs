@@ -3,8 +3,9 @@ using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.Services;
 using Core.Game.World;
-using Core.Math;
+using Core.Utils.Math;
 using Core.Utils.Logs;
+using Core.Game.World.Components;
 
 namespace Core.Game.Contorller
 {
@@ -30,11 +31,13 @@ namespace Core.Game.Contorller
             int moveType = message.ReadInt();
             _logger.Log($"Move from {origin} , to {target}");
 
-            var player = _players.GetPlayer(client);
+            var behaviour = client.Player.GetComponent<PlayerBehaviour>();
+            behaviour.Move(target, targetZ);
+         /*   var player = _players.GetPlayer(client);
             player.UpdateClientPosition(origin, originZ);
             player.Move(target, targetZ);
             var packet = OutPacketFactory.BuildOutMoveToLocation(player, target, targetZ);
-            _players.BroadcastPacket(packet);
+            _players.BroadcastPacket(packet);*/
            
         }
 
