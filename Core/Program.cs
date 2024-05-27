@@ -41,6 +41,7 @@ namespace Core
                     var ghost = playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData());
                     activePlayers.AddGhost(ghost);
                 }
+                activePlayers.AddGhost(playerFactory.BuildPlayer(null, playerRepos.LoadCharacter(0)));
 
             };
             var time = new Stopwatch();

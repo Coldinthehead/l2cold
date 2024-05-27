@@ -1,7 +1,7 @@
 ﻿using Core.Common.Network;
 using Core.Game.Network;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public interface IPacketController
     {

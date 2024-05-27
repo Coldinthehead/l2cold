@@ -2,7 +2,7 @@
 using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class SkillCdController : IPacketController
     {

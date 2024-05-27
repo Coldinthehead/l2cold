@@ -7,7 +7,7 @@ using Core.Game.Repository;
 using Core.Utils.Logs;
 
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     internal class RequestAuthController : IPacketController
     {

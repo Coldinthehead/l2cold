@@ -3,6 +3,7 @@ using System.Reflection.Metadata.Ecma335;
 
 namespace Core.Utils.Math
 {
+
     public struct Vec2
     {
         public float x;
@@ -67,5 +68,11 @@ namespace Core.Utils.Math
 
     public static class MathC
     {
+        public static int Clamp(int value, int min, int max)
+        {
+            int res = value > max ? max : value;
+            return res < min ? min : value;
+        }
+
     }
 }

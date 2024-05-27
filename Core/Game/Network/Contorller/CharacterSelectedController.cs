@@ -6,7 +6,7 @@ using Core.Game.Repository;
 using Core.Game.World.Factory;
 using Core.Utils.Logs;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class CharacterSelectedController : IPacketController
     {

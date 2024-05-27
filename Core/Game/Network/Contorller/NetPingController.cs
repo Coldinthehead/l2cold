@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class NetPingController : IPacketController
     {

@@ -3,6 +3,7 @@ using Core.Utils.Math;
 
 namespace Core.Game.World.Components
 {
+
     public class MovemventComponent : Component
     {
         public Vec2 Origin => _transform.Position;
@@ -10,14 +11,14 @@ namespace Core.Game.World.Components
         public float DistanceToTarget => _moveDistance;
 
         public float ZTarget { get; private set; }
-
-        public const float ACCELERATION_TIME = 0.5f;
         private Transform _transform;
         private Vec2 _targetPoint;
         private float _moveDistance;
         private Vec2 _direction;
         private float _moveTimer;
         private PlayerState _state;
+
+        private float _walkDistance;
 
         public override void OnStart()
         {
@@ -32,16 +33,32 @@ namespace Core.Game.World.Components
             _direction = Vec2.Direction(_transform.Position, target);
             ZTarget = _transform.ZPosition;
             Target = target;
+
+            if (_moveTimer == 0)
+            {
+                _walkDistance = _state.Stats.WalkSpd / 2.4f;
+            }
         }
 
         public void Translate(float dt)
         {
-            var speed = _moveTimer >= ACCELERATION_TIME ? _state.Stats.RunSpd : _state.Stats.WalkSpd;
-            var finalSpeed = speed * dt;
-            var step = _direction * finalSpeed;
-            _transform.Position += step;
-            _moveDistance -= finalSpeed;
-            _moveTimer += dt;
+            if (_walkDistance > 0)
+            {
+                var speed = _state.Stats.WalkSpd * dt;
+                var step = _direction * speed;
+                _transform.Position += step;
+                _walkDistance -= speed;
+                _moveDistance -= speed;
+            }
+            else if (_moveDistance > 0) 
+            {
+                var speed = _state.Stats.RunSpd * dt;
+                var step = _direction * speed;
+                _transform.Position += step;
+                _moveDistance -= speed;
+            }
+             _moveTimer += dt;
+
             if (_moveDistance <= 0)
             {
                 _transform.Position = _targetPoint;

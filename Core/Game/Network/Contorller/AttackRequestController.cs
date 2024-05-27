@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Core.Game.World.Actor;
 using Core.Game.World.Components;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class AttackRequestController : IPacketController
     {

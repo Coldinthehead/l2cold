@@ -4,7 +4,7 @@ using Core.Game.Data;
 using Core.Game.World.Actor;
 using Core.Game.World.Components;
 using Core.Utils.Math;
-using System;
+
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -249,8 +249,8 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(stats.WalkSpd) // fly
                 .WriteDouble(1.0) // move speed multiplier
                 .WriteDouble(1.0) // attack speed multiplier
-                .WriteDouble(16) // coll radius
-                .WriteDouble(24) // coll height
+                .WriteDouble(7.5) // coll radius
+                .WriteDouble(23) // coll height
                 .WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)
                 .WriteInt(info.Face)
@@ -531,8 +531,8 @@ namespace Core.Game.Network.ClientPacket
 
                 .WriteDouble(1.0)// mov multiplier
                 .WriteDouble(1.0) // attck spd multiplier
-                .WriteDouble(16.0) // coll radius
-                .WriteDouble(32.0); // coll height
+                .WriteDouble(7.5) // coll radius
+                .WriteDouble(23); // coll height
 
             packet.WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)

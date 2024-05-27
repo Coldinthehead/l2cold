@@ -1,6 +1,6 @@
 ﻿using Core.Common.Network;
 using Core.Common.Services;
-using Core.Game.Contorller;
+using Core.Game.Network.Controller;
 using Core.Game.Network.ClientPacket;
 using Core.Game.Repository;
 using Core.Game.Services;
@@ -8,6 +8,7 @@ using Core.Game.World;
 using Core.Game.World.Factory;
 using Core.Utils;
 using Core.Utils.Logs;
+using Core.Game.Network.Contorller;
 
 
 namespace Core.Game.Network
@@ -73,6 +74,9 @@ namespace Core.Game.Network
                     break;
                 case 0x0A:
                     new AttackRequestController(_worldPlayers).Run(client, message);
+                    break;
+                case 0x38:
+                    new SayController().Run(client, message);
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");

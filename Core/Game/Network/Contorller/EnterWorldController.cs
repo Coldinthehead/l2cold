@@ -5,7 +5,7 @@ using Core.Game.World;
 using Core.Game.World.Components;
 using Core.Utils.Logs;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class EnterWorldController : IPacketController
     {

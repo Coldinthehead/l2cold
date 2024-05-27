@@ -4,7 +4,7 @@ using Core.Game.Network.ClientPacket;
 using Core.Game.Network.Security;
 using Core.Utils.Logs;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     internal class ProtocolVersionController : IPacketController
     {

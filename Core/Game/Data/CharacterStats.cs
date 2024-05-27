@@ -42,10 +42,15 @@ public struct CharacterStats
         stats.MatkSpd = 10;
         stats.Mdef = 10;
 
-        stats.RunSpd = 200;
+        stats.RunSpd = 250;
         stats.WalkSpd = 100;
 
         return stats;
+    }
+
+    public void SetSpeed(int value)
+    {
+        RunSpd = value;
     }
 }
 

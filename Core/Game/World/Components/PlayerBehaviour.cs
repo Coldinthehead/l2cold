@@ -73,7 +73,7 @@ namespace Core.Game.World.Components
 
         public void Follow(ICharacter target)
         {
-            _stateMachine.FollowTarget(new FollowTargetDetails(target.gameObject, 50, null));
+            _stateMachine.FollowTarget(new FollowTargetDetails(target.gameObject, 40, null));
         }
         public void SelectTarget(ICharacter character)
         {

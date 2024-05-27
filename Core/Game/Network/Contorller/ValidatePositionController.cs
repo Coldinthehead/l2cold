@@ -6,7 +6,7 @@ using Core.Utils.Logs;
 using Core.Utils.Math;
 using System.Numerics;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class ValidatePositionController : IPacketController
     {

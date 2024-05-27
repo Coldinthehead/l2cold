@@ -6,7 +6,7 @@ using Core.Utils.Math;
 using Core.Utils.Logs;
 using Core.Game.World.Components;
 
-namespace Core.Game.Contorller
+namespace Core.Game.Network.Controller
 {
     public class CharMoveController : IPacketController
     {

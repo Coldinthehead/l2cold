@@ -44,5 +44,9 @@ namespace Core.Game.World.Components
             _movement = gameObject.GetComponent<MovemventComponent>();
         }
 
+        public void setSpeed(int newSpeed)
+        {
+            Stats.SetSpeed(newSpeed);
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Core.Game.World.Actor.PlayerStates
         }
     }
 
-    public class PostAttackState : LockedState, IPayloadedState<PostAttackDetails>
+    public class PostAttackState : PlayerBaseState, IPayloadedState<PostAttackDetails>
     {
 
         private PostAttackDetails _details;
@@ -42,6 +42,10 @@ namespace Core.Game.World.Actor.PlayerStates
         {
             _details = details;
             _waitTimer = 0;
+        }
+        public override void Attack(AttackDetails details)
+        {
+            StateMachine.CallActionFailed();
         }
 
         public override void Update(float dt)
