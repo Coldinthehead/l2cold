@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Core.Utils.Math
 {
@@ -6,6 +7,9 @@ namespace Core.Utils.Math
     {
         public float x;
         public float y;
+
+        public Vec2 Normalized => Vec2.Unit(this);
+
 
         public Vec2(float x, float y)
             => (this.x, this.y) = (x, y);
@@ -34,6 +38,13 @@ namespace Core.Utils.Math
         public static Vec2 operator -(Vec2 lhs, Vec2 rhs)
         {
             return new Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
+        }
+
+        public static Vec2 Unit(Vec2 a)
+        {
+            var l = MathF.Sqrt(a.x * a.x + a.y * a.y);
+            return new Vec2(a.x / l, a.y / l);
+            
         }
 
         public static float Distance(Vec2 a, Vec2 b)

@@ -4,6 +4,7 @@ using Core.Game.Data;
 using Core.Game.World.Actor;
 using Core.Game.World.Components;
 using Core.Utils.Math;
+using System;
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -248,8 +249,8 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(stats.WalkSpd) // fly
                 .WriteDouble(1.0) // move speed multiplier
                 .WriteDouble(1.0) // attack speed multiplier
-                .WriteDouble(16.0) // coll radius
-                .WriteDouble(32.0) // coll height
+                .WriteDouble(16) // coll radius
+                .WriteDouble(24) // coll height
                 .WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)
                 .WriteInt(info.Face)
@@ -629,6 +630,47 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt((int)player.Origin.y)
                 .WriteInt((int)player.OriginZ)
                 .WriteInt(player.Heading);// heading;
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildAutoAttackStart(ICharacter state)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x2b).WriteInt(state.ObjectId);
+
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildAttackResult(ICharacter attacker, ICharacter target, int damageAmount)
+        {
+           /* buffer.writeByte(0x05)
+                .writeInt(_attacker.ObjectId)
+                .writeInt(_mainTarget.ObjectId)
+                .writeInt(_mainDamage)
+                .writeByte(_hitFlags)
+                .writeInt((int)_attacker.transform.get_position().getX())
+                .writeInt((int)_attacker.transform.get_position().getY())
+                .writeInt((int)_attacker.transform.getZwithHeight())*/
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x05)
+                .WriteInt(attacker.ObjectId)
+                .WriteInt(target.ObjectId)
+                .WriteInt(damageAmount)
+                .WriteByte(0) // hit flags
+                .WriteInt((int)attacker.Origin.x)
+                .WriteInt((int)attacker.Origin.y)
+                .WriteInt((int)attacker.OriginZ);
+            packet.WriteShort(0);
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildAutoAttackFinish(ICharacter character)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x2c).WriteInt(character.ObjectId);
 
             return packet.toByteArray();
         }

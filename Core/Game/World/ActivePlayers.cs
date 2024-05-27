@@ -11,10 +11,12 @@ namespace Core.Game.World
         private Dictionary<GameClient, GameObject> _onlinePlayers = new();
         private List<ICharacter> _activePlayers = new();
 
+        private readonly List<GameObject> _simulatedObjets = new();
+
       
         public void Tick(float dt)
         {
-            foreach (var p in _onlinePlayers.Values)
+            foreach (var p in _simulatedObjets)
             {
                 p.Update(dt);
             }
@@ -24,6 +26,7 @@ namespace Core.Game.World
         {
             _onlinePlayers[client] = player;
             _activePlayers.Add(player.GetComponent<PlayerState>());
+            _simulatedObjets.Add(player);
         }
 
         public GameObject GetPlayer(GameClient client)
@@ -39,21 +42,9 @@ namespace Core.Game.World
             }
         }
 
-        public IEnumerable<ICharacter> GetOnlinePlayers()
+        public IEnumerable<ICharacter> GetAllCharacters()
         {
             return _activePlayers;
-        }
-
-  /*      public void AddGhost(GhostPlayer ghostPlayer)
-        {
-            _activePlayers.Add(ghostPlayer);
-            ghostPlayer.OnMovement += OnGhostMovement;
-        }*/
-
-        private void OnGhostMovement(IMovable character)
-        {
-            var packet = OutPacketFactory.BuildOutMoveToLocation(character, character.Target, (int)character.TargetZ);
-            BroadcastPacket(packet);
         }
 
         public ICharacter FindById(int objectId)
@@ -66,6 +57,12 @@ namespace Core.Game.World
                 }
             }
             return null;
+        }
+
+        internal void AddGhost(GameObject ghost)
+        {
+            _simulatedObjets.Add(ghost);
+            _activePlayers.Add(ghost.GetComponent<PlayerState>());
         }
     }
 }

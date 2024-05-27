@@ -1,4 +1,5 @@
-﻿using Core.Game.Data;
+﻿using Core.Engine;
+using Core.Game.Data;
 using Core.Utils.Math;
 
 namespace Core.Game.World.Actor
@@ -15,6 +16,7 @@ namespace Core.Game.World.Actor
 
     public interface ICharacter : IMovable
     {
+        public GameObject gameObject { get; }
         public CharacterInfo Info { get; }
         public string Title { get; }
         public CharacterGear GearItemId { get; }
@@ -23,6 +25,5 @@ namespace Core.Game.World.Actor
 
         public bool IsMoving { get; }
 
-        public void Update(float dt);
     }
 }

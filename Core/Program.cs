@@ -25,17 +25,24 @@ namespace Core
             var activePlayers = new ActivePlayers();
             var idFactory = new ObjectIdFactory();
             var playerRepos = new PlayerRepository(idFactory);
+            var playerFactory = new PlayerFactory(activePlayers);
             var game = new GameServer(
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
                 , loginService
                 , new GameClientFactory()
                 , new GamePacketHandler(loginService, activePlayers, idFactory, playerRepos
-                , new PlayerFactory(activePlayers)));
-       /*     game.OnStart += () =>
+                , playerFactory));
+            game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
-                activePlayers.AddGhost(playerRepos.BuildGhost());
-            };*/
+                /*activePlayers.AddGhost(playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData()));*/
+                for (int i = 0; i < 3; i++)
+                {
+                    var ghost = playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData());
+                    activePlayers.AddGhost(ghost);
+                }
+
+            };
             var time = new Stopwatch();
             game.Start();
             login.Start();

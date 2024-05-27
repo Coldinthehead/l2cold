@@ -28,6 +28,13 @@
             return c as T;
         }
 
+        
+        public T FindComponent<T>()
+        {
+            object c = _components[typeof(T)];
+            return (T)c;
+        }
+
         public void AddComponent(Component component)
         {
             PutAbstractions(component);

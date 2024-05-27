@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Game.World.Actor;
+using Core.Game.World.Components;
 
 namespace Core.Game.Contorller
 {
@@ -33,16 +34,15 @@ namespace Core.Game.Contorller
             int attackId = message.ReadByte();
 
             /*var target = client.Player.CharacterTarget;*/
-            ICharacter target = null;
-            if (target == null)
-            {
-                _worldPlayers.FindById(objId);
-            }
+            ICharacter target = _worldPlayers.FindById(objId);
             if (target == null)
             {
                 client.SendData(OutPacketFactory.BuildActionFailed());
                 return;
             }
+            Console.WriteLine("Process attack");
+            var player = client.Player.GetComponent<PlayerBehaviour>();
+            player.Attack(target);
 /*
             var distance = 50;
             client.Player.StartFollowTarget(target, distance);

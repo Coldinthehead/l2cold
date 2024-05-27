@@ -1,7 +1,5 @@
 ﻿using Core.Game.Data;
 using Core.Game.Services;
-using Core.Game.World.Actor;
-using Core.Utils.Math;
 
 namespace Core.Game.Repository
 {
@@ -15,7 +13,7 @@ namespace Core.Game.Repository
         {
             _idFactory = idFactory;
             for (int i = 0; i < 5; i++)
-                _savedPlayers.Add(BuildPlayer());
+                _savedPlayers.Add(BuildPlayerModel());
         }
 
         public GameCharacterModel LoadCharacter(int charId)
@@ -45,7 +43,7 @@ namespace Core.Game.Repository
             return ghost;
         }*/
 
-        private GameCharacterModel BuildPlayer()
+        public GameCharacterModel BuildPlayerModel()
         {
             var characterData = GameCharacterModel.BuildMockCharacter();
             characterData.Info.ObjectId = _idFactory.GetFreeId();
@@ -53,6 +51,14 @@ namespace Core.Game.Repository
 
             return characterData;
 
+        }
+
+        public GameCharacterModel LoadGhostData()
+        {
+            var ghost = GameCharacterModel.BuildMockCharacter();
+            ghost.Info.ObjectId = _idFactory.GetFreeId();
+            ghost.Info.Name = "Ghost" + ghost.Info.ObjectId;
+            return ghost;
         }
     }
 }

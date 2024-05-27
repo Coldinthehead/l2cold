@@ -1,12 +1,12 @@
 ﻿using Core.Utils.FSM;
 
 
-namespace Core.Game.World.Actor.States
+namespace Core.Game.World.Actor.PlayerStates
 {
 
     public class PlayerIdleState : PlayerBaseState, IState
     {
-        public PlayerIdleState(StateMachine<PlayerBaseState> stateMachine) : base(stateMachine)
+        public PlayerIdleState(PlayerBehaviourFSM stateMachine) : base(stateMachine)
         {
         }
 

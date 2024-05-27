@@ -3,7 +3,12 @@ using Core.Game.Network;
 
 namespace Core.Game.World.Components
 {
-    public class PlayerNetwork : Component
+    public interface IPacketBroadcaster
+    {
+        public void BroadcastPacket(byte[] packet);
+    }
+
+    public class PlayerNetwork : Component, IPacketBroadcaster
     {
         private readonly GameClient _client;
         private readonly ActivePlayers _allPlayers;

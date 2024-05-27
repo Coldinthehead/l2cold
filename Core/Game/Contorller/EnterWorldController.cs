@@ -1,5 +1,4 @@
 ﻿using Core.Common.Network;
-using Core.Engine;
 using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
 using Core.Game.World;
@@ -45,11 +44,6 @@ namespace Core.Game.Contorller
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);
 
-        /*    player.OnForceStopMove += (player) => 
-            {
-                var packet = OutPacketFactory.BuildStopMove(player);
-                _players.BroadcastPacket(packet);
-            };*/
         }
 
         private void SendNetPingPacket(GameClient client)
@@ -66,7 +60,7 @@ namespace Core.Game.Contorller
 
         private void InformClientWithPlayers(GameClient client)
         {
-            foreach (var player in _players.GetOnlinePlayers())
+            foreach (var player in _players.GetAllCharacters())
             {
                 client.SendData(OutPacketFactory.BuildCharInfo(player));
                 client.SendData(OutPacketFactory.BuildRelationChanged(player));

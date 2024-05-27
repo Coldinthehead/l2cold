@@ -57,7 +57,7 @@ namespace Core.Game.Network
                     new EnterWorldController(_worldPlayers).Run(client, message);
                     break;
                 case InPacket.CHARACTER_MOVE_TO_LOCATION:
-                    new CharMoveController(_worldPlayers, _idFactory).Run(client, message);
+                    new CharMoveController().Run(client, message);
                     break;
                 case InPacket.VALIDATE_POSITION:
                     new ValidatePositionController(_worldPlayers).Run(client, message);

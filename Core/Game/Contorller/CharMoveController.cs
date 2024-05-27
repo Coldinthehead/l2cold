@@ -1,6 +1,5 @@
 ﻿using Core.Common.Network;
 using Core.Game.Network;
-using Core.Game.Network.ClientPacket;
 using Core.Game.Services;
 using Core.Game.World;
 using Core.Utils.Math;
@@ -12,15 +11,7 @@ namespace Core.Game.Contorller
     public class CharMoveController : IPacketController
     {
         private static Logger<CharMoveController> _logger = Logger<CharMoveController>.BuildLogger();
-        private readonly ActivePlayers _players;
-        private readonly ObjectIdFactory _idFactory;
 
-
-        public CharMoveController(ActivePlayers players, ObjectIdFactory idFactory)
-        {
-            _players = players;
-            _idFactory = idFactory;
-        }
 
         public void Run(GameClient client, ReadableBuffer message)
         {
@@ -33,12 +24,6 @@ namespace Core.Game.Contorller
 
             var behaviour = client.Player.GetComponent<PlayerBehaviour>();
             behaviour.Move(target, targetZ);
-         /*   var player = _players.GetPlayer(client);
-            player.UpdateClientPosition(origin, originZ);
-            player.Move(target, targetZ);
-            var packet = OutPacketFactory.BuildOutMoveToLocation(player, target, targetZ);
-            _players.BroadcastPacket(packet);*/
-           
         }
 
 
