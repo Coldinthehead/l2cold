@@ -15,6 +15,7 @@ public class GameClient : IClient
     public SessionKeys Skeys => _sKeys;
     public GameObject Player { get; set; }
     public int Ping { get; set; }
+    public string AccountName { get; internal set; }
 
     private SessionKeys _sKeys;
     private ReadQue _inQue;

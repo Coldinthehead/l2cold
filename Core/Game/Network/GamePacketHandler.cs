@@ -19,21 +19,24 @@ namespace Core.Game.Network
 
         private readonly LoginServerService _loginServer;
         private readonly ActivePlayers _worldPlayers;
-        private readonly ObjectIdFactory _idFactory;
         private readonly PlayerRepository _characterRepository;
         private readonly PlayerFactory _playerFactory;
+        private readonly PlayerTempaltesRepository _templates;
+        private readonly CharacterService _characterService;
 
         public GamePacketHandler(LoginServerService loginServer
             , ActivePlayers worldPlayers
-            , ObjectIdFactory idFactory
             , PlayerRepository playerRepository
-            , PlayerFactory playerFactory)
+            , PlayerFactory playerFactory
+            , PlayerTempaltesRepository templates
+            , CharacterService characterService)
         {
             _loginServer = loginServer;
             _worldPlayers = worldPlayers;
-            _idFactory = idFactory;
             _characterRepository = playerRepository;
             _playerFactory = playerFactory;
+            _templates = templates;
+            _characterService = characterService;
         }
 
         public void HandlePacket(GameClient client, ReadableBuffer message)
@@ -46,10 +49,10 @@ namespace Core.Game.Network
                     new ProtocolVersionController().Run(client, message);
                     break;
                 case InPacket.REQUEST_AUTHENTICATION:
-                    new RequestAuthController(_loginServer, _characterRepository).Run(client, message);
+                    new RequestAuthController(_loginServer, _characterService).Run(client, message);
                     break;
                 case InPacket.CHARACTER_SELECTED:
-                    new CharacterSelectedController(_characterRepository, _playerFactory).Run(client, message);
+                    new CharacterSelectedController(_playerFactory, _characterService).Run(client, message);
                     break;
                 case InPacket.EX_PACKET:
                     _logger.Log($"[EX_PACKET] received from :", client);
@@ -79,7 +82,10 @@ namespace Core.Game.Network
                     new SayController().Run(client, message);
                     break;
                 case 0x0e:
-                    new CharacterCreateController().Run(client, message);
+                    new CharacterCreateController(_templates).Run(client, message);
+                    break;
+                case 0x0b:
+                    new NewCharacterController(_characterService).Run(client, message);
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");

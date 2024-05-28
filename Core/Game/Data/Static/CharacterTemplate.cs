@@ -52,6 +52,14 @@ namespace Core.Game.Data.Static
         public readonly Dictionary<int, float> HpTable, MpTable, CpTable;
         public readonly int BaseLevel;
 
+        private static Dictionary<string, int> Races = new()
+        {
+            {"HUMAN", 0 },
+            {"ELF", 1 },
+            {"DARK_ELF", 2 },
+            {"ORC", 3 },
+            {"DWARF", 4 },
+        };
 
         public CharacterTemplate(Dictionary<string, string> templateMap)
         {
@@ -90,7 +98,7 @@ namespace Core.Game.Data.Static
             var values = ParseTable(str);
             var table = new Dictionary<int, float>();
 
-            for (int i =0; i < values.Length;i++)
+            for (int i = 0; i < values.Length; i++)
             {
                 table[baseLevel + i] = values[i];
             }
@@ -109,6 +117,25 @@ namespace Core.Game.Data.Static
             }
 
             return result;
+        }
+
+        public int GetRace()
+        {
+            return Races[Race];
+        }
+
+        public double GetHalth(int level)
+        {
+            return (double)HpTable[level];
+        }
+        public double GetMana(int level)
+        {
+            return (double)MpTable[level];
+        }
+
+        public double GetCp(int level)
+        {
+            return (double)CpTable[level];
         }
     }
 }

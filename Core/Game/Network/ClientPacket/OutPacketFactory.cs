@@ -1,10 +1,10 @@
 ﻿using Core.Common.Network;
 using Core.Common.Services;
 using Core.Game.Data;
+using Core.Game.Data.Static;
 using Core.Game.World.Actor;
 using Core.Game.World.Components;
 using Core.Utils.Math;
-
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -12,28 +12,27 @@ namespace Core.Game.Network.ClientPacket
     {
         public static byte[] BuildSelectedCharacter(int pkey2, GameCharacterModel model)
         {
-            var info = model.Info;
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_SELECTED)
-                .WriteString(info.Name)
-                .WriteInt(info.ObjectId)
+                .WriteString(model.Name)
+                .WriteInt(model.ObjectId)
                 .WriteString(model.Title)
                 .WriteInt(pkey2)
-                .WriteInt(info.ClanId)
+                .WriteInt(model.ClanId)
                 .WriteInt(0)
-                .WriteInt(info.Female ? 1 : 0)
-                .WriteInt(info.Race)
-                .WriteInt(info.CurrentClass)
+                .WriteInt(model.Female ? 1 : 0)
+                .WriteInt(model.Race)
+                .WriteInt(model.CurrentClass)
                 .WriteInt(1) // is active ?
                 .WriteInt((int)model.x)
                 .WriteInt((int)model.y)
                 .WriteInt((int)model.z)
-                .WriteDouble(info.CurrentHealth)
-                .WriteDouble(info.CurrentMana)
-                .WriteInt(info.Sp)
-                .WriteLong(info.Exp)
-                .WriteInt(info.Level)
-                .WriteInt(info.Karma)
+                .WriteDouble(model.CurrentHealth)
+                .WriteDouble(model.CurrentMana)
+                .WriteInt(model.Sp)
+                .WriteLong(model.Exp)
+                .WriteInt(model.Level)
+                .WriteInt(model.Karma)
                 .WriteInt(0);
 
             for (int i = 0; i < 38; i++)
@@ -82,7 +81,8 @@ namespace Core.Game.Network.ClientPacket
             return movePacket.toByteArray();
         }
 
-        public static byte[] BuildCharSelectList(LSAccountDetails accDetails, List<GameCharacterModel> characterList)
+        public static byte[] BuildCharSelectList(GameClient client
+            , List<GameCharacterModel> characterList)
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.CHARACTER_LIST_INFO)
@@ -90,11 +90,11 @@ namespace Core.Game.Network.ClientPacket
 
             foreach (var player in characterList)
             {
-                var characterInfo = player.Info;
+                var characterInfo = player;
                 packet.WriteString(characterInfo.Name)
                     .WriteInt(characterInfo.ObjectId)
-                    .WriteString(accDetails.Id)
-                    .WriteInt(accDetails.Skeys.Play1)
+                    .WriteString(client.AccountName)
+                    .WriteInt(client.Skeys.Play1)
                     .WriteInt(characterInfo.ClanId)
                     .WriteInt(0) // ?
                     .WriteInt(characterInfo.Female ? 1 : 0)
@@ -254,7 +254,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)
                 .WriteInt(info.Face)
-                .WriteString(player.Title)
+                .WriteString(info.Title)
                 .WriteInt(0) // clanid
                 .WriteInt(0) // clan crest id
                 .WriteInt(0) // ally id
@@ -341,7 +341,7 @@ namespace Core.Game.Network.ClientPacket
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(OutPacket.TARGET_SELECTED)
-                .WriteInt(player.Info.ObjectId)
+                .WriteInt(player.ObjectId)
                 .WriteInt(1)
                 .WriteDouble(player.Origin.x)
                 .WriteDouble(player.Origin.y)
@@ -539,7 +539,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(info.Face)
                 .WriteInt(1) // is gm
 
-                .WriteString(character.Title);
+                .WriteString(info.Title);
 
             packet
                 .WriteInt(info.ClanId)
@@ -671,6 +671,47 @@ namespace Core.Game.Network.ClientPacket
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(0x2c).WriteInt(character.ObjectId);
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildNewCharacterList(List<CharacterTemplate> startingTempaltes)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x17)
+                .WriteInt(startingTempaltes.Count);
+            foreach (var template  in startingTempaltes) 
+            {
+                packet.WriteInt(template.GetRace())
+                    .WriteInt(template.ID)
+                    .WriteInt(0x46)
+                    .WriteInt(template.STR)
+                    .WriteInt(0x0a)
+                    .WriteInt(0x46)
+                    .WriteInt(template.DEX)
+                    .WriteInt(0x0a)
+                    .WriteInt(0x46)
+                    .WriteInt(template.CON)
+                    .WriteInt(0x0a)
+                    .WriteInt(0x46)
+                    .WriteInt(template.INT)
+                    .WriteInt(0x0a)
+                    .WriteInt(0x46)
+                    .WriteInt(template.WIT)
+                    .WriteInt(0x0a)
+                    .WriteInt(0x46)
+                    .WriteInt(template.MEN)
+                    .WriteInt(0x0a);
+
+            }
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildCharacterCreateOk()
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x19).WriteInt(1);
 
             return packet.toByteArray();
         }

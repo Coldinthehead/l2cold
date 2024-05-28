@@ -20,7 +20,7 @@ namespace Core.Game.World.Factory
 
         public GameObject BuildPlayer(GameClient client, GameCharacterModel details)
         {
-            var gameObject = new GameObject(details.Info.ObjectId);
+            var gameObject = new GameObject(details.ObjectId);
             gameObject.transform.Position = new Vec2(details.x, details.y);
             gameObject.transform.ZPosition = (float)details.z;
 
@@ -42,7 +42,7 @@ namespace Core.Game.World.Factory
 
         public GameObject BuildGhostPlayer(GameCharacterModel model)
         {
-            var gameObject = new GameObject(model.Info.ObjectId);
+            var gameObject = new GameObject(model.ObjectId);
             
             gameObject.transform.Position = new Vec2(model.x, model.y );
             gameObject.transform.ZPosition = (float)model.z;

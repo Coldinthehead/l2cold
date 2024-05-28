@@ -1,4 +1,7 @@
-﻿namespace Core.Game.Data;
+﻿using Core.Game.Data.Static;
+using Core.Game.Repository;
+
+namespace Core.Game.Data;
 
 public struct CharacterStats
 {
@@ -48,6 +51,7 @@ public struct CharacterStats
         return stats;
     }
 
+ 
     public void SetSpeed(int value)
     {
         RunSpd = value;

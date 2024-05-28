@@ -17,12 +17,9 @@ namespace Core.Game.World.Actor
     public interface ICharacter : IMovable
     {
         public GameObject gameObject { get; }
-        public CharacterInfo Info { get; }
-        public string Title { get; }
+        public GameCharacterModel Info { get; }
         public CharacterGear GearItemId { get; }
- 
         public CharacterStats Stats { get; }
-
         public bool IsMoving { get; }
 
     }

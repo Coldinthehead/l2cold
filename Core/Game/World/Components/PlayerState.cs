@@ -7,9 +7,7 @@ namespace Core.Game.World.Components
 {
     public class PlayerState : Component, ICharacter
     {
-        public CharacterInfo Info {get; private set;}
-
-        public string Title  {get; private set;}
+        public GameCharacterModel Info {get; private set;}
 
         public CharacterGear GearItemId  {get; private set;}
         public CharacterGear GearObjectId { get; private set;}
@@ -32,8 +30,7 @@ namespace Core.Game.World.Components
 
         public PlayerState(GameCharacterModel details)
         {
-            Title = details.Title;
-            Info = details.Info;
+            Info = details;
             Stats = details.Stats;
             GearObjectId = details.GearObjectId;
             GearItemId = details.GearItemId;

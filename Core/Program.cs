@@ -29,22 +29,29 @@ namespace Core
             var playerFactory = new PlayerFactory(activePlayers);
             var charTempaltesFactory = new CharacterTemplateFactory(new DataConfig());
             var playerTemplateRepository = new PlayerTempaltesRepository(charTempaltesFactory);
+            var characterService = new CharacterService(playerRepos, playerTemplateRepository);
+
             var game = new GameServer(
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
                 , loginService
                 , new GameClientFactory()
-                , new GamePacketHandler(loginService, activePlayers, idFactory, playerRepos
-                , playerFactory));
+                , new GamePacketHandler(
+                    loginService
+                    , activePlayers
+                    , playerRepos
+                    , playerFactory
+                    , playerTemplateRepository
+                    , characterService));
             game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
                 charTempaltesFactory.LoadTemplates();
-                for (int i = 0; i < 3; i++)
+          /*      for (int i = 0; i < 3; i++)
                 {
                     var ghost = playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData());
                     activePlayers.AddGhost(ghost);
                 }
-                activePlayers.AddGhost(playerFactory.BuildPlayer(null, playerRepos.LoadCharacter(0)));
+                activePlayers.AddGhost(playerFactory.BuildPlayer(null, playerRepos.LoadCharacter(0)));*/
 
             };
             var time = new Stopwatch();

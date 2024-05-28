@@ -1,9 +1,8 @@
 ﻿using Core.Common.Network;
 using Core.Common.Security;
 using Core.Common.Services;
-using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
-using Core.Game.Repository;
+using Core.Game.Services;
 using Core.Utils.Logs;
 
 
@@ -14,12 +13,13 @@ namespace Core.Game.Network.Controller
         private static Logger<RequestAuthController> _logger = Logger<RequestAuthController>.BuildLogger();
 
         private readonly LoginServerService _loginServer;
-        private readonly PlayerRepository _characterRepository;
+        private readonly CharacterService _characterService;
+        
 
-        public RequestAuthController(LoginServerService logginServer, PlayerRepository characterRepository)
+        public RequestAuthController(LoginServerService logginServer, CharacterService chracterService)
         {
             _loginServer = logginServer;
-            _characterRepository = characterRepository;
+            _characterService = chracterService;
         }
 
         public void Run(GameClient client, ReadableBuffer message)
@@ -30,9 +30,10 @@ namespace Core.Game.Network.Controller
             var accDetails = new LSAccountDetails(accId, sessionKeys);
             if (_loginServer.IsAccountLoggedIn(accDetails))
             {
-                var savedCharacter = _characterRepository.LoadCharacterList();
-                client.SendData(OutPacketFactory.BuildCharSelectList(accDetails, savedCharacter));
+                client.AccountName = accId;
                 client.SetSessionKeys(sessionKeys);
+                var savedCharacter = _characterService.LoadCharacterList(client.AccountName);
+                client.SendData(OutPacketFactory.BuildCharSelectList(client, savedCharacter));
             }
         }
 
