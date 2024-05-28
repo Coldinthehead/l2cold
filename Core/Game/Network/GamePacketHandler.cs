@@ -19,7 +19,7 @@ namespace Core.Game.Network
 
         private readonly LoginServerService _loginServer;
         private readonly ActivePlayers _worldPlayers;
-        private readonly ObjectIdFactory _idFactory = new();
+        private readonly ObjectIdFactory _idFactory;
         private readonly PlayerRepository _characterRepository;
         private readonly PlayerFactory _playerFactory;
 
@@ -77,6 +77,9 @@ namespace Core.Game.Network
                     break;
                 case 0x38:
                     new SayController().Run(client, message);
+                    break;
+                case 0x0e:
+                    new CharacterCreateController().Run(client, message);
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");

@@ -10,6 +10,7 @@ using Core.Game.World;
 using Core.Game.Services;
 using Core.Game.Repository;
 using Core.Game.World.Factory;
+using Core.Game.Data.Static;
 
 
 namespace Core
@@ -26,6 +27,8 @@ namespace Core
             var idFactory = new ObjectIdFactory();
             var playerRepos = new PlayerRepository(idFactory);
             var playerFactory = new PlayerFactory(activePlayers);
+            var charTempaltesFactory = new CharacterTemplateFactory(new DataConfig());
+            var playerTemplateRepository = new PlayerTempaltesRepository(charTempaltesFactory);
             var game = new GameServer(
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
                 , loginService
@@ -35,7 +38,7 @@ namespace Core
             game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
-                /*activePlayers.AddGhost(playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData()));*/
+                charTempaltesFactory.LoadTemplates();
                 for (int i = 0; i < 3; i++)
                 {
                     var ghost = playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData());

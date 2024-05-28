@@ -26,23 +26,6 @@ namespace Core.Game.Repository
             return _savedPlayers;
         }
 
-  /*      public GhostPlayer BuildGhost()
-        {
-            var data = GameCharacterModel.BuildMockCharacter();
-            data.Info.ObjectId = _idFactory.GetFreeId();
-            data.Info.Name = "Ghost" + data.Info.ObjectId;
-
-            var ghost = new GhostPlayer(data.Info.ObjectId, new Vec2(data.x, data.y)
-                , (float)data.z, data);
-
-            ghost.AddMoveNode(new Vec2(data.x, data.y));
-            ghost.AddMoveNode(new Vec2(7835, 7208));
-            ghost.AddMoveNode(new Vec2(8469, 7328));
-            ghost.AddMoveNode(new Vec2(7052, 7393));
-
-            return ghost;
-        }*/
-
         public GameCharacterModel BuildPlayerModel()
         {
             var characterData = GameCharacterModel.BuildMockCharacter();
