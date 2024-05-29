@@ -20,6 +20,8 @@ namespace Core.Game.Network.Controller
             _characterService = characterService;
         }
 
+        
+
         public void Run(GameClient client, ReadableBuffer message)
         {
             var charId = message.ReadInt();

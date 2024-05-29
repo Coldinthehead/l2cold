@@ -1,5 +1,4 @@
 ﻿using Core.Common.Network;
-using Core.Common.Services;
 using Core.Game.Data;
 using Core.Game.Data.Static;
 using Core.Game.World.Actor;
@@ -249,8 +248,8 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(stats.WalkSpd) // fly
                 .WriteDouble(1.0) // move speed multiplier
                 .WriteDouble(1.0) // attack speed multiplier
-                .WriteDouble(7.5) // coll radius
-                .WriteDouble(23) // coll height
+                .WriteDouble(info.CollisionRadius) // coll radius
+                .WriteDouble(info.CollisionHeight) // coll height
                 .WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)
                 .WriteInt(info.Face)
@@ -531,8 +530,8 @@ namespace Core.Game.Network.ClientPacket
 
                 .WriteDouble(1.0)// mov multiplier
                 .WriteDouble(1.0) // attck spd multiplier
-                .WriteDouble(7.5) // coll radius
-                .WriteDouble(23); // coll height
+                .WriteDouble(info.CollisionRadius) // coll radius
+                .WriteDouble(info.CollisionHeight); // coll height
 
             packet.WriteInt(info.HairStyle)
                 .WriteInt(info.HairColor)
@@ -645,14 +644,6 @@ namespace Core.Game.Network.ClientPacket
 
         public static byte[] BuildAttackResult(ICharacter attacker, ICharacter target, int damageAmount)
         {
-           /* buffer.writeByte(0x05)
-                .writeInt(_attacker.ObjectId)
-                .writeInt(_mainTarget.ObjectId)
-                .writeInt(_mainDamage)
-                .writeByte(_hitFlags)
-                .writeInt((int)_attacker.transform.get_position().getX())
-                .writeInt((int)_attacker.transform.get_position().getY())
-                .writeInt((int)_attacker.transform.getZwithHeight())*/
             var packet = new WriteableBuffer();
             packet.WriteByte(0x05)
                 .WriteInt(attacker.ObjectId)

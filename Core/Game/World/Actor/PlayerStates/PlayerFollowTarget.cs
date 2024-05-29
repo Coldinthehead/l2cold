@@ -38,6 +38,7 @@ namespace Core.Game.World.Actor.PlayerStates
         {
             _details = details;
             var target = _details.Target.GetComponent<PlayerState>();
+            StateMachine.CallStartFollowTarget(details);
             _packetBroadcaster.BroadcastPacket(OutPacketFactory
                 .BuildMoveToPawn(_state, target, (int)_details.Distance));
         }
@@ -55,13 +56,16 @@ namespace Core.Game.World.Actor.PlayerStates
                 if (_details.Callback != null)
                 {
                     _details.Callback();
+                    StateMachine.CallTargetReached(_details);
                 }
             }
         }
 
         public override void OnExit()
         {
+            StateMachine.CallFollowStopped();
             _packetBroadcaster.BroadcastPacket(OutPacketFactory.BuildStopMove(_state));
+
         }
     }
 }

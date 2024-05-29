@@ -19,31 +19,35 @@ namespace Core.Game.Network
 
         private readonly LoginServerService _loginServer;
         private readonly ActivePlayers _worldPlayers;
-        private readonly PlayerRepository _characterRepository;
         private readonly PlayerFactory _playerFactory;
         private readonly PlayerTempaltesRepository _templates;
         private readonly CharacterService _characterService;
+        private Dictionary<int, IPacketController> _controllers;
+        private readonly IPacketController _unknownPacketController;
 
         public GamePacketHandler(LoginServerService loginServer
             , ActivePlayers worldPlayers
-            , PlayerRepository playerRepository
             , PlayerFactory playerFactory
             , PlayerTempaltesRepository templates
-            , CharacterService characterService)
+            , CharacterService characterService
+            , Dictionary<int, IPacketController> controllers)
         {
             _loginServer = loginServer;
             _worldPlayers = worldPlayers;
-            _characterRepository = playerRepository;
             _playerFactory = playerFactory;
             _templates = templates;
             _characterService = characterService;
+            _controllers = controllers;
+            _unknownPacketController = new UnknownPacketController();
         }
 
         public void HandlePacket(GameClient client, ReadableBuffer message)
         {
             _logger.Log($"Recieveing data from [{client}]");
             int opCode = message.ReadByte();
-            switch (opCode)
+            var controller = _controllers.GetValueOrDefault(opCode, _unknownPacketController);
+            controller.Run(client, message);
+          /*  switch (opCode)
             {
                 case InPacket.PROTOCOL_VERISION:
                     new ProtocolVersionController().Run(client, message);
@@ -89,8 +93,8 @@ namespace Core.Game.Network
                     break;
                 default:
                     _logger.Log($"Unknown opcode [{opCode.ToHex()}] from [{client}]");
-                    break;
-            }
+                    break;*/
+          
         }
     }
 }

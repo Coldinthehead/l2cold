@@ -3,27 +3,28 @@ using Core.Game.Repository;
 
 namespace Core.Game.Data;
 
+[Serializable]
 public struct CharacterStats
 {
-    public int STR;
-    public int DEX;
-    public int CON;
-    public int INT;
-    public int WIT;
-    public int MEN;
+    public int STR { get; set; }
+    public int DEX { get; set; }
+    public int CON { get; set; }
+    public int INT { get; set; }
+    public int WIT { get; set; }
+    public int MEN { get; set; }
 
-    public int Patk;
-    public int PatkSpd;
-    public int Pdef;
-    public int Evasion;
-    public int Accuracy;
-    public int Crit;
-    public int Matk;
-    public int MatkSpd;
-    public int Mdef;
+    public int Patk { get; set; }
+    public int PatkSpd { get; set; }
+    public int Pdef { get; set; }
+    public int Evasion { get; set; }
+    public int Accuracy { get; set; }
+    public int Crit { get; set; }
+    public int Matk { get; set; } 
+    public int MatkSpd { get; set; }
+    public int Mdef { get; set; }
 
-    public int RunSpd;
-    public int WalkSpd;
+    public int RunSpd { get; set; }
+    public int WalkSpd { get; set; }
 
     public static CharacterStats BuildMockCharacterStats()
     {

@@ -2,6 +2,7 @@
 using Core.Game.Data.Static;
 using Core.Game.Data.User;
 using Core.Game.Services;
+using System.Text.Json;
 
 namespace Core.Game.Repository
 {
@@ -9,12 +10,38 @@ namespace Core.Game.Repository
     {
 
         private readonly ObjectIdFactory _idFactory;
-
+        
         private readonly Dictionary<string, List<GameCharacterModel>> _playersDatabase = new Dictionary<string, List<GameCharacterModel>>();
 
         public PlayerRepository(ObjectIdFactory idFactory)
         {
             _idFactory = idFactory;
+            LoadData();
+        }
+
+        public void SaveData()
+        {
+            var data = JsonSerializer.Serialize(_playersDatabase);
+            File.WriteAllText("./data.json", data);
+            Console.WriteLine("data saved");
+        }
+
+        public void LoadData() 
+        {
+            if (File.Exists("./data.json"))
+            {
+                var json = File.ReadAllText("./data.json");
+                var load = (Dictionary<string, List<GameCharacterModel>>)JsonSerializer.Deserialize(json, typeof(Dictionary<string, List<GameCharacterModel>>));
+                foreach (var kp in load)
+                {
+                    _playersDatabase[kp.Key] = new List<GameCharacterModel>();
+                    foreach (var character in kp.Value)
+                    {
+                        character.ObjectId = _idFactory.GetFreeId();
+                        _playersDatabase[kp.Key].Add(character);
+                    }
+                }
+            }
         }
 
         public GameCharacterModel LoadGhostData()
@@ -60,6 +87,8 @@ namespace Core.Game.Repository
             model.x = template.x;
             model.y = template.y;
             model.z = template.z;
+            model.CollisionHeight = model.Female ? template.CollisionHeightFemale : template.CollisionHeight;
+            model.CollisionRadius = model.Female ? template.CollisionRadiusFemale : template.CollisionRadius;
             model.Stats = BuildStat(template);
             model.GearObjectId = new CharacterGear();
             model.GearItemId = new CharacterGear();
@@ -69,6 +98,8 @@ namespace Core.Game.Repository
                 _playersDatabase[accountName] = new List<GameCharacterModel>();
             }
             _playersDatabase[accountName].Add(model);
+
+            SaveData();
         }
 
         private CharacterStats BuildStat(CharacterTemplate template)

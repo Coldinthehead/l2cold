@@ -5,13 +5,13 @@ using Core.Game.World;
 using Core.Utils.Math;
 using Core.Utils.Logs;
 using Core.Game.World.Components;
+using Core.Game.Network.ClientPacket;
 
 namespace Core.Game.Network.Controller
 {
     public class CharMoveController : IPacketController
     {
         private static Logger<CharMoveController> _logger = Logger<CharMoveController>.BuildLogger();
-
 
         public void Run(GameClient client, ReadableBuffer message)
         {

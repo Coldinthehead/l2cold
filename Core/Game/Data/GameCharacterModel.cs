@@ -1,34 +1,37 @@
-﻿using Core.Game.Data.Static;
-using Core.Game.Data.User;
+﻿using System.Text.Json.Serialization;
 
 namespace Core.Game.Data;
 
-
-public struct GameCharacterModel
+[Serializable]
+public class GameCharacterModel
 {
-    public string Title;
-    public string Name;
-    public int ObjectId;
-    public int ClanId;
-    public bool Female;
-    public int Race;
-    public int BaseClass;
-    public double CurrentHealth;
-    public double CurrentMana;
-    public int Sp;
-    public long Exp;
-    public int Level;
-    public int Karma;
-    public int HairStyle;
-    public int HairColor;
-    public int Face;
-    public double MaxHealth;
-    public double MaxMana;
-    public int CurrentClass;
-    public double x, y, z;
-    public CharacterStats Stats;
-    public CharacterGear GearObjectId;
-    public CharacterGear GearItemId;
+    public string Title { get; set; }
+    public string Name { get; set; }
+    public int ObjectId { get; set; }
+    public int ClanId { get; set; }
+    public bool Female { get; set; }
+    public int Race { get; set; }
+    public int BaseClass { get; set; }
+    public double CurrentHealth { get; set; }
+    public double CurrentMana { get; set; }
+    public int Sp { get; set; }
+    public long Exp { get; set; }
+    public int Level { get; set; }
+    public int Karma { get; set; }
+    public int HairStyle { get; set; }
+    public int HairColor { get; set; }
+    public int Face { get; set; }
+    public double MaxHealth { get; set; }
+    public double MaxMana { get; set; }
+    public int CurrentClass { get; set; }
+    public double x { get; set; }
+    public double y { get; set; }
+    public double z { get; set; }
+    public float CollisionHeight { get; set; } 
+    public float CollisionRadius { get; set; }
+    public CharacterStats Stats { get; set; }
+    public CharacterGear GearObjectId { get; set; }
+    public CharacterGear GearItemId { get; set; }
 
     public static GameCharacterModel BuildMockCharacter()
     {
@@ -55,13 +58,6 @@ public struct GameCharacterModel
         model.x = 8000;
         model.y = 8000;
         model.z = -2800;
-        return model;
-    }
-
-    public static GameCharacterModel Build(string characterName, PlayerAppearance appearance)
-    {
-        var model = new GameCharacterModel();
-
         return model;
     }
 }

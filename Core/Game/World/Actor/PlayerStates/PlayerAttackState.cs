@@ -83,6 +83,7 @@ namespace Core.Game.World.Actor.PlayerStates
 
             var attackResut = OutPacketFactory.BuildAttackResult(_state, attackDetails.Target, 0);
             _packetBroadcaster.BroadcastPacket(attackResut);
+            StateMachine.CallAttackStarted(attackDetails);
         }
 
         public override void Attack(AttackDetails details)
@@ -108,6 +109,7 @@ namespace Core.Game.World.Actor.PlayerStates
 
         private void FinishAttack()
         {
+            StateMachine.CallAttackFinished();
             var finishAttackPacket = OutPacketFactory.BuildAutoAttackFinish(_state);
             _packetBroadcaster.BroadcastPacket(finishAttackPacket);
             StateMachine.ChangeState<PlayerIdleState>();

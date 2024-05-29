@@ -14,7 +14,7 @@ namespace Core.Game.Network.Controller
 
         private readonly LoginServerService _loginServer;
         private readonly CharacterService _characterService;
-        
+
 
         public RequestAuthController(LoginServerService logginServer, CharacterService chracterService)
         {

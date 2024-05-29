@@ -12,6 +12,7 @@ namespace Core.Game.Network.Controller
         private static Logger<EnterWorldController> _logger = Logger<EnterWorldController>.BuildLogger();
         private readonly ActivePlayers _players;
 
+
         public EnterWorldController(ActivePlayers players)
         {
             _players = players;

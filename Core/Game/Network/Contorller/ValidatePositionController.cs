@@ -18,7 +18,6 @@ namespace Core.Game.Network.Controller
         {
             _activePlayers = activePlayers;
         }
-        public static int SYNC_THRESHOLD = 30;
 
         public void Run(GameClient client, ReadableBuffer message)
         {

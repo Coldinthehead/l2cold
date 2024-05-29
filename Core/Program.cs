@@ -11,6 +11,9 @@ using Core.Game.Services;
 using Core.Game.Repository;
 using Core.Game.World.Factory;
 using Core.Game.Data.Static;
+using Core.Game.Network.Controller;
+using Core.Game.Network.Contorller;
+using Core.Game.Network.ClientPacket;
 
 
 namespace Core
@@ -22,14 +25,37 @@ namespace Core
             var login = new LoginServer(new TcpListener(IPAddress.Parse("127.0.0.1"), 2106)
                 , new LoginClientFactory(), new LoginPacketHandler());
 
+            var dataConfig = new DataConfig();
             var loginService = new LoginServerService(login);
             var activePlayers = new ActivePlayers();
             var idFactory = new ObjectIdFactory();
             var playerRepos = new PlayerRepository(idFactory);
             var playerFactory = new PlayerFactory(activePlayers);
-            var charTempaltesFactory = new CharacterTemplateFactory(new DataConfig());
+            var charTempaltesFactory = new CharacterTemplateFactory(dataConfig);
             var playerTemplateRepository = new PlayerTempaltesRepository(charTempaltesFactory);
             var characterService = new CharacterService(playerRepos, playerTemplateRepository);
+            var gameServerControllers = new Dictionary<int, IPacketController>()
+            {
+                { InPacket.PROTOCOL_VERISION, new ProtocolVersionController() },
+                { InPacket.REQUEST_AUTHENTICATION, new RequestAuthController(loginService, characterService) },
+                { InPacket.CHARACTER_SELECTED, new CharacterSelectedController(playerFactory, characterService) },
+                { InPacket.ENTER_WORLD,new EnterWorldController(activePlayers) },
+                { InPacket.CHARACTER_MOVE_TO_LOCATION, new CharMoveController() },
+                { InPacket.VALIDATE_POSITION, new ValidatePositionController(activePlayers) },
+                { InPacket.REQUEST_SKILL_CD, new SkillCdController() },
+                { InPacket.ACTION, new ActionController(activePlayers) },
+                { 0xA8, new NetPingController() },
+                { 0x0A, new AttackRequestController(activePlayers) },
+                { 0x38, new SayController() },
+                { 0x0e, new CharacterCreateController(playerTemplateRepository) },
+                { 0x0b, new NewCharacterController(characterService) },
+
+            };
+            AppDomain.CurrentDomain.ProcessExit += (x, y) =>
+            {
+                playerRepos.SaveData();
+            };
+
 
             var game = new GameServer(
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
@@ -38,21 +64,14 @@ namespace Core
                 , new GamePacketHandler(
                     loginService
                     , activePlayers
-                    , playerRepos
                     , playerFactory
                     , playerTemplateRepository
-                    , characterService));
+                    , characterService
+                    , gameServerControllers));
             game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
                 charTempaltesFactory.LoadTemplates();
-          /*      for (int i = 0; i < 3; i++)
-                {
-                    var ghost = playerFactory.BuildGhostPlayer(playerRepos.LoadGhostData());
-                    activePlayers.AddGhost(ghost);
-                }
-                activePlayers.AddGhost(playerFactory.BuildPlayer(null, playerRepos.LoadCharacter(0)));*/
-
             };
             var time = new Stopwatch();
             game.Start();
@@ -60,7 +79,7 @@ namespace Core
             time.Start();
             var dt = 0.0f;
             float delta = 0f;
-            float targetDelta = 1.0f / 30.0f ;
+            float targetDelta = 1.0f / 30.0f;
             while (login.IsRunning && game.IsRunning)
             {
                 delta += dt;
@@ -78,6 +97,7 @@ namespace Core
 
             game.Stop();
             login.Stop();
+
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Core.Game.World.Actor.PlayerStates
 
         public void OnEnter()
         {
-            Console.WriteLine("Entering Idle State");
+            StateMachine.CallOnIdle();
         }
 
         public override void OnExit()

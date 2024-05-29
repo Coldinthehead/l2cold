@@ -2,7 +2,6 @@
 using Core.Game.World.Components;
 using Core.Utils.FSM;
 using Core.Utils.Math;
-using Org.BouncyCastle.Asn1.X509;
 
 
 namespace Core.Game.World.Actor.PlayerStates
@@ -46,6 +45,7 @@ namespace Core.Game.World.Actor.PlayerStates
 
         private void StartMovement(Vec2 point)
         {
+            StateMachine.CallMoveToPoint(point);
             _network.BroadcastPacket(OutPacketFactory.BuildOutMoveToLocation(_playerCharacter, point
                 , (int)StateMachine.gameObject.transform.ZPosition));
             _movement.SetTarget(point);

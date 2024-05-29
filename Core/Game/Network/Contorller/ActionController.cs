@@ -10,6 +10,8 @@ namespace Core.Game.Network.Controller
 {
     public class ActionController : IPacketController
     {
+        public int OpCode => InPacket.ACTION;
+        
         private static readonly Logger<ActionController> _logger = Logger<ActionController>.BuildLogger();
         private readonly ActivePlayers _worldCharacters;
 
