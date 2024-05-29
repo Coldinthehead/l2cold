@@ -61,13 +61,7 @@ namespace Core
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)
                 , loginService
                 , new GameClientFactory()
-                , new GamePacketHandler(
-                    loginService
-                    , activePlayers
-                    , playerFactory
-                    , playerTemplateRepository
-                    , characterService
-                    , gameServerControllers));
+                , new GamePacketHandler(gameServerControllers));
             game.OnStart += () =>
             {
                 Console.WriteLine($"GS listening on : {game.LocalEndPoint}");
@@ -97,7 +91,6 @@ namespace Core
 
             game.Stop();
             login.Stop();
-
         }
     }
 }
