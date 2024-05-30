@@ -25,7 +25,7 @@ namespace Core.Game.Network.Controller
             _logger.Log($"[ENTER_WORLD] received from :", client);
             var player = client.Player;
             var playerState = player.GetComponent<PlayerState>();
-            client.SendData(OutPacketFactory.BuildMockUserInfo(client, playerState));
+            client.SendData(OutPacketFactory.BuildUserInfo(playerState));
             client.SendData(OutPacketFactory.BuildChangeMoveType(player.ObjectId));
             client.SendData(OutPacketFactory.BuildQuestList());
             client.SendData(OutPacketFactory.BuildMagicIconEffects());

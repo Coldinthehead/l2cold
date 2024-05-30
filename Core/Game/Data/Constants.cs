@@ -33,5 +33,33 @@ namespace Core.Game.Data
             Modify = 2,
             Remove = 3
         }
+
+        public enum Bodypart
+        {
+            Underwear = 0x0001,
+            RightEarring = 0x0002,
+            LeftEarring = 0x0004,
+            Neckless = 0x0008,
+            RightRing = 0x0010,
+            LeftRing = 0x0020,
+            Head = 0x0040,
+            RightHand = 0x0080,
+            LeftHand = 0x0100,
+            Gloves = 0x0200,
+            Chest = 0x0400,
+            Legs = 0x0800,
+            Boots = 0x1000,
+            Back = 0x2000,
+            TwoHand = 0x4000,
+            FullArmor = 0x8000,
+            Hair = 0x010000,
+            Wolf = 0x020000,
+            Hatchling = 0x100000,
+            Strider = 0x200000,
+            BabyPet = 0x400000,
+            Face = 0x040000,
+            DHair = 0x080000,
+            None = 0x0000
+        }
     }
 }

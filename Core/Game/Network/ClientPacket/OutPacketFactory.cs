@@ -190,9 +190,10 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(info.Female ? 1 : 0)
                 .WriteInt(info.CurrentClass);
             var itemIds = player.GearItemId;
+            var inventory = player.gameObject.GetComponent<PlayerInventory>();
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.HEAD)
-              .WriteInt(itemIds.R_HAND)
+              .WriteInt(inventory.RightHand.ItemId)
               .WriteInt(itemIds.L_HAND)
               .WriteInt(itemIds.GLOVES)
               .WriteInt(itemIds.CHEST)
@@ -416,7 +417,7 @@ namespace Core.Game.Network.ClientPacket
             return packet.toByteArray();
         }
 
-        public static byte[] BuildMockUserInfo(GameClient client, PlayerState player)
+        public static byte[] BuildUserInfo(PlayerState player)
         {
             var packet = new WriteableBuffer();
             var character = player;
@@ -457,6 +458,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(20); // is weapon equipped 20 no 40 yes
 
             var itemIds = player. GearObjectId;
+            var inventory = player.gameObject.GetComponent<PlayerInventory>();
             packet.WriteInt(itemIds.D_HAIR)
                 .WriteInt(itemIds.R_EAR)
                 .WriteInt(itemIds.L_EAR)
@@ -464,7 +466,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(itemIds.R_FINGER)
                 .WriteInt(itemIds.L_FINGER)
                 .WriteInt(itemIds.HEAD)
-                .WriteInt(itemIds.R_HAND)
+                .WriteInt(inventory.RightHand.ObjectId)
                 .WriteInt(itemIds.L_HAND)
                 .WriteInt(itemIds.GLOVES)
                 .WriteInt(itemIds.CHEST)
@@ -483,7 +485,7 @@ namespace Core.Game.Network.ClientPacket
               .WriteInt(itemIds.R_FINGER)
               .WriteInt(itemIds.L_FINGER)
               .WriteInt(itemIds.HEAD)
-              .WriteInt(itemIds.R_HAND)
+              .WriteInt(inventory.RightHand.ItemId)
               .WriteInt(itemIds.L_HAND)
               .WriteInt(itemIds.GLOVES)
               .WriteInt(itemIds.CHEST)
@@ -718,17 +720,23 @@ namespace Core.Game.Network.ClientPacket
             foreach(var itemDetails in itemList)
             {
                 var item = itemDetails.Item;
-                packet.WriteShort(itemDetails.ChangeId)
+                packet
+                    .WriteShort(itemDetails.ChangeId)
                     .WriteShort(item.Type1)
+
                     .WriteInt(item.ObjectId)
                     .WriteInt(item.ItemId)
                     .WriteInt(item.Count)
+
                     .WriteShort(item.Type2)
                     .WriteShort(item.CustomType1)
                     .WriteShort(item.IsEquipped ? 1 : 0)
+
                     .WriteInt(item.Bodypart)
+
                     .WriteShort(item.EnchantLevel)
                     .WriteShort(item.CustomType2)
+
                     .WriteInt(item.AugmentationId)
                     .WriteInt(item.Mana);
             }

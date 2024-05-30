@@ -1,6 +1,6 @@
 ﻿using Core.Game.Data;
 using Core.Game.Data.Static.Items;
-
+using Core.Game.World.Components;
 
 namespace Core.Game.World.Items
 {
@@ -12,13 +12,15 @@ namespace Core.Game.World.Items
         private bool Equeppied;
         private int EnchantLevel;
 
+        public virtual int ItemId => _template.ID;
+
         public ItemInstance(int objectId, WeaponTemplate template)
         {
             ObjectId = objectId;
             _template = template;
         }
 
-        public NetworkItem GetSerizlized()
+        public virtual NetworkItem GetSerizlized()
         {
             var item = new NetworkItem();
             item.ObjectId = ObjectId;
@@ -30,7 +32,31 @@ namespace Core.Game.World.Items
             item.EnchantLevel = EnchantLevel;
             item.AugmentationId = 0;
             item.Mana = -1;
+            item.Bodypart = (int)Constants.Bodypart.RightHand;
             return item;
+        }
+
+        public virtual void OnUse(PlayerInventory inventory)
+        {
+            Console.WriteLine("on use item" + ObjectId);
+            if (Equeppied)
+            {
+                inventory.DeequipWeapon(this);
+            }
+            else
+            {
+                inventory.EquipWeapon(this);
+            }
+        }
+
+        public virtual void OnEquip(PlayerInventory playerInventory)
+        {
+            Equeppied = true;
+        }
+
+        public virtual void OnDeequip(PlayerInventory playerInventory)
+        {
+            Equeppied = false;
         }
     }
 }

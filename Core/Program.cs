@@ -57,6 +57,7 @@ namespace Core
                 { 0x0e, new CharacterCreateController(playerTemplateRepository) },
                 { 0x0b, new NewCharacterController(characterService) },
                 { 0x0F, new RequestItemListController() },
+                { 0x14, new UseItemController() },
 
             };
 
