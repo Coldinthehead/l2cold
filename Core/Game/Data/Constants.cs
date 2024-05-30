@@ -1,12 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using static Core.Game.Data.Constants;
 
 namespace Core.Game.Data
 {
+    public static class EnumsExt
+    {
+        public static int AsInt(this Constants.Bodypart input)
+        {
+            return (int)input;
+        }
 
+        public static Constants.Bodypart ParseAsBodypart(this string str)
+        {
+            switch (str.ToLower())
+            {
+                case "rhand":
+                    return Bodypart.RightHand;
+                case "lhand":
+                    return Bodypart.LeftHand;
+                case "lrhand":
+                    return Bodypart.TwoHand;
+                case "chest":
+                    return Bodypart.Chest;
+                case "gloves":
+                    return Bodypart.Gloves;
+                case "legs":
+                    return Bodypart.Legs;
+                case "feet":
+                    return Bodypart.Boots;
+                case "head":
+                    return Bodypart.Head;
+                case "fullarmor":
+                    return Bodypart.FullArmor;
+                case "rear,lear":
+                    return Bodypart.RightEarring;
+                case "rfinger,lfinger":
+                    return Bodypart.RightRing;
+                case "neck":
+                    return Bodypart.Neckless;
+                default:
+                    return Bodypart.None;
+            }
+        }
+    }
     public static class Constants
     {
         public enum ItemType1
@@ -59,7 +94,7 @@ namespace Core.Game.Data
             BabyPet = 0x400000,
             Face = 0x040000,
             DHair = 0x080000,
-            None = 0x0000
+            None = 0x0000,
         }
     }
 }

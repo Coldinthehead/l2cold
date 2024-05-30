@@ -32,7 +32,7 @@ namespace Core.Game.World.Items
             item.EnchantLevel = EnchantLevel;
             item.AugmentationId = 0;
             item.Mana = -1;
-            item.Bodypart = (int)Constants.Bodypart.RightHand;
+            item.Bodypart = _template.Bodypart.AsInt();
             return item;
         }
 
@@ -41,11 +41,26 @@ namespace Core.Game.World.Items
             Console.WriteLine("on use item" + ObjectId);
             if (Equeppied)
             {
-                inventory.DeequipWeapon(this);
+                if (_template.Bodypart == Constants.Bodypart.TwoHand)
+                {
+                    inventory.DeequipTwoHand(this);
+                }
+                else
+                {
+                    inventory.DeequipRightHand(this);
+                }
             }
             else
             {
-                inventory.EquipWeapon(this);
+                if (_template.Bodypart == Constants.Bodypart.TwoHand)
+                {
+                    inventory.EquipTwoHand(this);
+                }
+                else
+                {
+                    inventory.EquipRightHand(this);
+                }
+                
             }
         }
 

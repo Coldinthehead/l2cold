@@ -23,6 +23,8 @@ namespace Core.Game.World.Components
         private List<ItemInstance> _allItems;
 
         public ItemInstance RightHand { get; private set; }
+        public ItemInstance LeftHand { get;private set; }
+        public ItemInstance TwoHand { get; private set; }
 
         private readonly static NullItem _nullItem = new NullItem(0, null);
 
@@ -30,6 +32,8 @@ namespace Core.Game.World.Components
         {
             _allItems = new List<ItemInstance>();
             RightHand = _nullItem;
+            LeftHand = _nullItem;
+            TwoHand = _nullItem;
         }
 
         public override void OnStart()
@@ -71,30 +75,83 @@ namespace Core.Game.World.Components
             return null;
         }
 
-        public void EquipWeapon(ItemInstance itemInstance)
+        public void DeequipTwoHand(ItemInstance item)
         {
             var changeId = (int)Constants.ItemChangeType.Modify;
             var updateList = new List<ItemChangedDetails>();
+
+            TwoHand.OnDeequip(this);
+            updateList.Add(new ItemChangedDetails (changeId, TwoHand.GetSerizlized()));
+            TwoHand = _nullItem;
+
+            _network.SendPersonalPacket(OutPacketFactory.BuildUserInfo(_playerState));
+            _network.BroadcastPacket(OutPacketFactory.BuildCharInfo(_playerState));
+            _network.SendPersonalPacket(OutPacketFactory.BuildInventoryUpdate(updateList));
+        }
+
+        public void EquipTwoHand(ItemInstance item)
+        {
+            var changeId = (int)Constants.ItemChangeType.Modify;
+            var updateList = new List<ItemChangedDetails>();
+
+            if (RightHand.ItemId != 0)
+            {
+                RightHand.OnDeequip(this);
+                updateList.Add(new ItemChangedDetails(changeId, RightHand.GetSerizlized()));
+                RightHand = _nullItem;
+            }
+
+            if (LeftHand.ItemId != 0)
+            {
+                LeftHand.OnDeequip(this);
+                updateList.Add(new ItemChangedDetails(changeId, LeftHand.GetSerizlized()));
+                LeftHand = _nullItem;
+            }
+
+            if (TwoHand.ItemId != 0)
+            {
+                TwoHand.OnDeequip(this);
+                updateList.Add(new ItemChangedDetails(changeId, TwoHand.GetSerizlized()));
+            }
+
+            TwoHand = item;
+            item.OnEquip(this);
+            updateList.Add(new ItemChangedDetails(changeId, item.GetSerizlized()));
+
+            _network.SendPersonalPacket(OutPacketFactory.BuildUserInfo(_playerState));
+            _network.BroadcastPacket(OutPacketFactory.BuildCharInfo(_playerState));
+            _network.SendPersonalPacket(OutPacketFactory.BuildInventoryUpdate(updateList));
+
+
+        }
+
+        public void EquipRightHand(ItemInstance itemInstance)
+        {
+            var changeId = (int)Constants.ItemChangeType.Modify;
+            var updateList = new List<ItemChangedDetails>();
+
             if (RightHand.ItemId != 0)
             {
                 RightHand.OnDeequip(this);
                 updateList.Add(new ItemChangedDetails(changeId, RightHand.GetSerizlized()));
             }
             
-            if (RightHand.ItemId != itemInstance.ItemId) 
+            if (TwoHand.ItemId != 0)
             {
-                RightHand = itemInstance;
-                itemInstance.OnEquip(this);
-
-                updateList.Add(new ItemChangedDetails(changeId, itemInstance.GetSerizlized()));
+                TwoHand.OnDeequip(this);
+                updateList.Add(new ItemChangedDetails(changeId, TwoHand.GetSerizlized()));
+                TwoHand = _nullItem;
             }
+            
+            RightHand = itemInstance;
+            itemInstance.OnEquip(this);
+            updateList.Add(new ItemChangedDetails(changeId, itemInstance.GetSerizlized()));
 
-           
             _network.SendPersonalPacket(OutPacketFactory.BuildUserInfo(_playerState));
             _network.SendPersonalPacket(OutPacketFactory.BuildInventoryUpdate(updateList));
         }
 
-        public void DeequipWeapon(ItemInstance itemInstace)
+        public void DeequipRightHand(ItemInstance itemInstace)
         {
             var changeId = (int)Constants.ItemChangeType.Modify;
             var updateList = new List<ItemChangedDetails>();
@@ -106,6 +163,14 @@ namespace Core.Game.World.Components
             _network.SendPersonalPacket(OutPacketFactory.BuildUserInfo(_playerState));
             _network.BroadcastPacket(OutPacketFactory.BuildCharInfo(_playerState));
             _network.SendPersonalPacket(OutPacketFactory.BuildInventoryUpdate(updateList));
+        }
+
+        public ItemInstance GetRightHand()
+        {
+            if (TwoHand.ItemId != 0)
+                return TwoHand;
+            else
+                return RightHand;
         }
     }
 }

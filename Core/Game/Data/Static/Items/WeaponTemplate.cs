@@ -64,7 +64,7 @@ namespace Core.Game.Data.Static.Items
     {
         public int ID;
         public string Name;
-        public string Bodypart;
+        public Constants.Bodypart Bodypart;
         public int PAtk;
         public string WeaponType;
         public int Crit;
@@ -75,7 +75,7 @@ namespace Core.Game.Data.Static.Items
         {
             ID = templateMap.GetInt("id");
             Name = templateMap["name"];
-            Bodypart = templateMap["bodypart"];
+            Bodypart = templateMap["bodypart"].ParseAsBodypart();
             PAtk = templateMap.GetIntOrDefault("p_dam");
             WeaponType = templateMap["weapon_type"];
             Crit = templateMap.GetIntOrDefault("critical");

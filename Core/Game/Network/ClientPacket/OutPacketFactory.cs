@@ -193,14 +193,14 @@ namespace Core.Game.Network.ClientPacket
             var inventory = player.gameObject.GetComponent<PlayerInventory>();
             packet.WriteInt(itemIds.D_HAIR)
               .WriteInt(itemIds.HEAD)
-              .WriteInt(inventory.RightHand.ItemId)
-              .WriteInt(itemIds.L_HAND)
+              .WriteInt(inventory.GetRightHand().ItemId)
+              .WriteInt(inventory.LeftHand.ItemId)
               .WriteInt(itemIds.GLOVES)
               .WriteInt(itemIds.CHEST)
               .WriteInt(itemIds.LEGS)
               .WriteInt(itemIds.FEET)
               .WriteInt(itemIds.BACK)
-              .WriteInt(itemIds.LR_HAND)
+              .WriteInt(0) // lrhand
               .WriteInt(0) // hair
               .WriteInt(0); // face;
 
@@ -466,14 +466,14 @@ namespace Core.Game.Network.ClientPacket
                 .WriteInt(itemIds.R_FINGER)
                 .WriteInt(itemIds.L_FINGER)
                 .WriteInt(itemIds.HEAD)
-                .WriteInt(inventory.RightHand.ObjectId)
-                .WriteInt(itemIds.L_HAND)
+                .WriteInt(inventory.GetRightHand().ObjectId)
+                .WriteInt(inventory.LeftHand.ObjectId)
                 .WriteInt(itemIds.GLOVES)
                 .WriteInt(itemIds.CHEST)
                 .WriteInt(itemIds.LEGS)
                 .WriteInt(itemIds.FEET)
                 .WriteInt(itemIds.BACK)
-                .WriteInt(itemIds.LR_HAND)
+                .WriteInt(0) // lr hand
                 .WriteInt(itemIds.HAIR)
                 .WriteInt(itemIds.FACE);
 
@@ -485,14 +485,14 @@ namespace Core.Game.Network.ClientPacket
               .WriteInt(itemIds.R_FINGER)
               .WriteInt(itemIds.L_FINGER)
               .WriteInt(itemIds.HEAD)
-              .WriteInt(inventory.RightHand.ItemId)
+              .WriteInt(inventory.GetRightHand().ItemId)
               .WriteInt(itemIds.L_HAND)
               .WriteInt(itemIds.GLOVES)
               .WriteInt(itemIds.CHEST)
               .WriteInt(itemIds.LEGS)
               .WriteInt(itemIds.FEET)
               .WriteInt(itemIds.BACK)
-              .WriteInt(itemIds.LR_HAND)
+              .WriteInt(0) // lrhand
               .WriteInt(itemIds.HAIR)
               .WriteInt(itemIds.FACE);
 
