@@ -12,7 +12,7 @@ namespace Core.Game.World.Components
         public CharacterGear GearItemId  {get; private set;}
         public CharacterGear GearObjectId { get; private set;}
 
-        public CharacterStats Stats {get; private set;}
+        public EntityStats Stats => _stats;
 
         public bool IsMoving => _movement.DistanceToTarget > 0;
 
@@ -27,11 +27,11 @@ namespace Core.Game.World.Components
         public int Heading => gameObject.transform.Heading;
 
         private MovemventComponent _movement;
+        private EntityStats _stats;
 
         public PlayerState(GameCharacterModel details)
         {
             Info = details;
-            Stats = details.Stats;
             GearObjectId = details.GearObjectId;
             GearItemId = details.GearItemId;
         }
@@ -39,11 +39,7 @@ namespace Core.Game.World.Components
         public override void OnStart()
         {
             _movement = gameObject.GetComponent<MovemventComponent>();
-        }
-
-        public void setSpeed(int newSpeed)
-        {
-            Stats.SetSpeed(newSpeed);
+            _stats = gameObject.GetComponent<EntityStats>();
         }
     }
 }

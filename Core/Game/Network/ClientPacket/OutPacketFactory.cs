@@ -234,8 +234,8 @@ namespace Core.Game.Network.ClientPacket
             var stats = player.Stats;
             packet.WriteInt(0) // pvp flag
                 .WriteInt(0) //arma
-                .WriteInt(stats.MatkSpd)
-                .WriteInt(stats.PatkSpd)
+                .WriteInt(stats.MAtkSpd)
+                .WriteInt(stats.PAtkSpd)
                 .WriteInt(0) // pvp flag
                 .WriteInt(0) //karma
                 .WriteInt(stats.RunSpd)
@@ -272,7 +272,7 @@ namespace Core.Game.Network.ClientPacket
                 .WriteByte(0) // rec left
                 .WriteShort(0) // rec have
                 .WriteInt(info.CurrentClass)
-                .WriteInt(24555) // cp cur
+                .WriteInt(0) // cp cur
                 .WriteInt(2555) // cp max
                 .WriteByte(0) // enchant effect
                 .WriteByte(0) // tvt circle
@@ -505,16 +505,16 @@ namespace Core.Game.Network.ClientPacket
             for (int i = 0; i < 4; i++)
                 packet.WriteShort(0x00);
 
-            packet.WriteInt(stats.Patk)
-                .WriteInt(stats.PatkSpd)
-                .WriteInt(stats.Pdef)
+            packet.WriteInt(stats.PAtk)
+                .WriteInt(stats.PAtkSpd)
+                .WriteInt(stats.PDef)
                 .WriteInt(stats.Evasion)
                 .WriteInt(stats.Accuracy)
                 .WriteInt(stats.Crit)
-                .WriteInt(stats.Matk)
-                .WriteInt(stats.MatkSpd)
-                .WriteInt(stats.PatkSpd)
-                .WriteInt(stats.Mdef);
+                .WriteInt(stats.MAtk)
+                .WriteInt(stats.MAtkSpd)
+                .WriteInt(stats.PAtkSpd)
+                .WriteInt(stats.MDef);
 
             packet.WriteInt(0) // pvp flag 
                 .WriteInt(info.Karma);

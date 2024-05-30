@@ -89,7 +89,6 @@ namespace Core.Game.Repository
             model.z = template.z;
             model.CollisionHeight = model.Female ? template.CollisionHeightFemale : template.CollisionHeight;
             model.CollisionRadius = model.Female ? template.CollisionRadiusFemale : template.CollisionRadius;
-            model.Stats = BuildStat(template);
             model.GearObjectId = new CharacterGear();
             model.GearItemId = new CharacterGear();
 
@@ -102,31 +101,6 @@ namespace Core.Game.Repository
             SaveData();
         }
 
-        private CharacterStats BuildStat(CharacterTemplate template)
-        {
-            var stats = new CharacterStats();
-            stats.STR = template.STR;
-            stats.DEX = template.DEX;
-            stats.CON = template.CON;
-            stats.INT = template.INT;
-            stats.WIT = template.WIT;
-            stats.MEN = template.MEN;
-
-            stats.Patk = template.PAtk;
-            stats.PatkSpd = template.PAtkSpd;
-            stats.Pdef = template.PDef;
-            stats.Evasion = 0;
-            stats.Accuracy = 0;
-            stats.Crit = template.CritRate;
-            stats.Matk = template.MAtk;
-            stats.MatkSpd = template.MAtkSpd;
-            stats.Mdef = template.MDef;
-
-            stats.RunSpd = template.RunSpeed;
-            stats.WalkSpd = template.RunSpeed / 2;
-
-            return stats;
-        }
 
         internal GameCharacterModel LoadSingleCharacter(string accountName, int charId)
         {

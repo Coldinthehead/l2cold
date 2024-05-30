@@ -101,5 +101,10 @@
         {
             throw new NotImplementedException();
         }
+
+        internal object WriteInt(object pAtkSpd)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

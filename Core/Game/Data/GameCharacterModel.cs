@@ -29,7 +29,6 @@ public class GameCharacterModel
     public double z { get; set; }
     public float CollisionHeight { get; set; } 
     public float CollisionRadius { get; set; }
-    public CharacterStats Stats { get; set; }
     public CharacterGear GearObjectId { get; set; }
     public CharacterGear GearItemId { get; set; }
 
@@ -52,7 +51,6 @@ public class GameCharacterModel
         model.MaxHealth = 9955;
         model.MaxMana = 1313;
         model.CurrentClass = 1;
-        model.Stats = CharacterStats.BuildMockCharacterStats();
         model.GearObjectId = new CharacterGear();
         model.GearItemId = new CharacterGear();
         model.x = 8000;

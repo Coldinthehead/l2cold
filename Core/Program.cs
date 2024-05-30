@@ -30,10 +30,12 @@ namespace Core
             var activePlayers = new ActivePlayers();
             var idFactory = new ObjectIdFactory();
             var playerRepos = new PlayerRepository(idFactory);
-            var playerFactory = new PlayerFactory(activePlayers);
             var charTempaltesFactory = new CharacterTemplateFactory(dataConfig);
+            var attributeTableFactory = new AttributeTableFactory(dataConfig);
             var playerTemplateRepository = new PlayerTempaltesRepository(charTempaltesFactory);
+            var attributeRepository = new AttributeBonusRepository(attributeTableFactory);
             var characterService = new CharacterService(playerRepos, playerTemplateRepository);
+            var playerFactory = new PlayerFactory(activePlayers, playerTemplateRepository, attributeRepository);
             var gameServerControllers = new Dictionary<int, IPacketController>()
             {
                 { InPacket.PROTOCOL_VERISION, new ProtocolVersionController() },
@@ -51,11 +53,11 @@ namespace Core
                 { 0x0b, new NewCharacterController(characterService) },
 
             };
+
             AppDomain.CurrentDomain.ProcessExit += (x, y) =>
             {
                 playerRepos.SaveData();
             };
-
 
             var game = new GameServer(
                 new TcpListener(IPAddress.Parse("127.0.0.1"), 7777)

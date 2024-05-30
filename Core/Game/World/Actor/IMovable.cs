@@ -1,5 +1,6 @@
 ﻿using Core.Engine;
 using Core.Game.Data;
+using Core.Game.World.Components;
 using Core.Utils.Math;
 
 namespace Core.Game.World.Actor
@@ -19,7 +20,7 @@ namespace Core.Game.World.Actor
         public GameObject gameObject { get; }
         public GameCharacterModel Info { get; }
         public CharacterGear GearItemId { get; }
-        public CharacterStats Stats { get; }
+        public EntityStats Stats { get; }
         public bool IsMoving { get; }
 
     }

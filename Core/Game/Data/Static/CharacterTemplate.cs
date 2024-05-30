@@ -6,7 +6,7 @@ namespace Core.Game.Data.Static
 {
     public class DataConfig
     {
-        public string CharacterTemplatesPath = "E:\\dotnet\\l2cold\\Core\\data\\";
+        public string DataRootPath = "E:\\dotnet\\l2cold\\Core\\data\\";
     }
 
     public class CharacterTemplateFactory
@@ -22,7 +22,7 @@ namespace Core.Game.Data.Static
         public void LoadTemplates()
         {
             XmlDocument doc = new XmlDocument();
-            var path = _config.CharacterTemplatesPath + "playerTemplates.xml";
+            var path = _config.DataRootPath + "playerTemplates.xml";
             doc.Load(File.OpenRead(path));
 
             var root = doc.DocumentElement;
@@ -36,7 +36,6 @@ namespace Core.Game.Data.Static
                 }
                 Templates.Add(new CharacterTemplate(template));
             }
-            Console.WriteLine(doc);
         }
     }
 
