@@ -47,6 +47,9 @@ namespace Core.Game.World.Factory
             var behaviour = new PlayerBehaviour(BuildPlayerFSM(gameObject));
             gameObject.AddComponent(behaviour);
 
+            var invenotry = new PlayerInventory();
+            gameObject.AddComponent(invenotry);
+
             gameObject.Start();
             return gameObject;
         }

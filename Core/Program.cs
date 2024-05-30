@@ -14,6 +14,7 @@ using Core.Game.Data.Static;
 using Core.Game.Network.Controller;
 using Core.Game.Network.Contorller;
 using Core.Game.Network.ClientPacket;
+using Core.Game.Data.Static.Items;
 
 
 namespace Core
@@ -34,14 +35,18 @@ namespace Core
             var attributeTableFactory = new AttributeTableFactory(dataConfig);
             var playerTemplateRepository = new PlayerTempaltesRepository(charTempaltesFactory);
             var attributeRepository = new AttributeBonusRepository(attributeTableFactory);
+            var itemTemplatesFactory = new ItemTemplateFactory(dataConfig);
+            var itemTemplateRepos = new ItemTemplatesRepository(itemTemplatesFactory);
             var characterService = new CharacterService(playerRepos, playerTemplateRepository);
             var playerFactory = new PlayerFactory(activePlayers, playerTemplateRepository, attributeRepository);
+            var itemInstaceFactory = new ItemInstaceFactory(idFactory, itemTemplateRepos);
+            var itemService = new ItemService(itemInstaceFactory);
             var gameServerControllers = new Dictionary<int, IPacketController>()
             {
                 { InPacket.PROTOCOL_VERISION, new ProtocolVersionController() },
                 { InPacket.REQUEST_AUTHENTICATION, new RequestAuthController(loginService, characterService) },
                 { InPacket.CHARACTER_SELECTED, new CharacterSelectedController(playerFactory, characterService) },
-                { InPacket.ENTER_WORLD,new EnterWorldController(activePlayers) },
+                { InPacket.ENTER_WORLD,new EnterWorldController(activePlayers, itemService) },
                 { InPacket.CHARACTER_MOVE_TO_LOCATION, new CharMoveController() },
                 { InPacket.VALIDATE_POSITION, new ValidatePositionController(activePlayers) },
                 { InPacket.REQUEST_SKILL_CD, new SkillCdController() },
@@ -51,6 +56,7 @@ namespace Core
                 { 0x38, new SayController() },
                 { 0x0e, new CharacterCreateController(playerTemplateRepository) },
                 { 0x0b, new NewCharacterController(characterService) },
+                { 0x0F, new RequestItemListController() },
 
             };
 

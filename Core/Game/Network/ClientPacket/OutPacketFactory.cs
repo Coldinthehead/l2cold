@@ -3,7 +3,9 @@ using Core.Game.Data;
 using Core.Game.Data.Static;
 using Core.Game.World.Actor;
 using Core.Game.World.Components;
+using Core.Game.World.Items;
 using Core.Utils.Math;
+using System;
 
 namespace Core.Game.Network.ClientPacket
 {
@@ -703,6 +705,59 @@ namespace Core.Game.Network.ClientPacket
         {
             var packet = new WriteableBuffer();
             packet.WriteByte(0x19).WriteInt(1);
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildInventoryUpdate(List<ItemChangedDetails> itemList)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x27)
+                .WriteShort(itemList.Count);
+
+            foreach(var itemDetails in itemList)
+            {
+                var item = itemDetails.Item;
+                packet.WriteShort(itemDetails.ChangeId)
+                    .WriteShort(item.Type1)
+                    .WriteInt(item.ObjectId)
+                    .WriteInt(item.ItemId)
+                    .WriteInt(item.Count)
+                    .WriteShort(item.Type2)
+                    .WriteShort(item.CustomType1)
+                    .WriteShort(item.IsEquipped ? 1 : 0)
+                    .WriteInt(item.Bodypart)
+                    .WriteShort(item.EnchantLevel)
+                    .WriteShort(item.CustomType2)
+                    .WriteInt(item.AugmentationId)
+                    .WriteInt(item.Mana);
+            }
+
+            return packet.toByteArray();
+        }
+
+        public static byte[] BuildInventoryList(List<NetworkItem> items, bool showWindow)
+        {
+            var packet = new WriteableBuffer();
+            packet.WriteByte(0x1b)
+                .WriteShort(showWindow ? 1 : 0)
+                .WriteShort(items.Count);
+
+            foreach (var item in items)
+            {
+                packet.WriteShort(item.Type1)
+                      .WriteInt(item.ObjectId)
+                      .WriteInt(item.ItemId)
+                      .WriteInt(item.Count)
+                      .WriteShort(item.Type2)
+                      .WriteShort(item.CustomType1)
+                      .WriteShort(item.IsEquipped ? 1 : 0)
+                      .WriteInt(item.Bodypart)
+                      .WriteShort(item.EnchantLevel)
+                      .WriteShort(item.CustomType2)
+                      .WriteInt(item.AugmentationId)
+                      .WriteInt(item.Mana);
+            }
 
             return packet.toByteArray();
         }

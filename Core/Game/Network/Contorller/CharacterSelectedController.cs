@@ -1,8 +1,8 @@
 ﻿using Core.Common.Network;
 using Core.Engine;
 using Core.Game.Network.ClientPacket;
-using Core.Game.Repository;
 using Core.Game.Services;
+using Core.Game.World.Components;
 using Core.Game.World.Factory;
 using Core.Utils.Logs;
 
@@ -14,13 +14,14 @@ namespace Core.Game.Network.Controller
         private readonly PlayerFactory _playerFactory;
         private readonly CharacterService _characterService;
 
-        public CharacterSelectedController(PlayerFactory playerFactory, CharacterService characterService)
+        public CharacterSelectedController(PlayerFactory playerFactory
+            , CharacterService characterService)
         {
             _playerFactory = playerFactory;
             _characterService = characterService;
         }
 
-        
+
 
         public void Run(GameClient client, ReadableBuffer message)
         {

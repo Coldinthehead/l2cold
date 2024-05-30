@@ -3,7 +3,6 @@ using System.Xml;
 
 namespace Core.Game.Data.Static
 {
-
     public class AttributeTableFactory
     {
         private readonly DataConfig _config;

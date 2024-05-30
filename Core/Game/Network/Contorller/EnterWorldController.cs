@@ -1,6 +1,6 @@
 ﻿using Core.Common.Network;
-using Core.Game.Network;
 using Core.Game.Network.ClientPacket;
+using Core.Game.Services;
 using Core.Game.World;
 using Core.Game.World.Components;
 using Core.Utils.Logs;
@@ -11,11 +11,13 @@ namespace Core.Game.Network.Controller
     {
         private static Logger<EnterWorldController> _logger = Logger<EnterWorldController>.BuildLogger();
         private readonly ActivePlayers _players;
+        private readonly ItemService _itemService;
 
 
-        public EnterWorldController(ActivePlayers players)
+        public EnterWorldController(ActivePlayers players, ItemService itemService)
         {
             _players = players;
+            _itemService = itemService;
         }
 
         public void Run(GameClient client, ReadableBuffer message)
@@ -44,6 +46,11 @@ namespace Core.Game.Network.Controller
             InformClientsWithPlayer(playerState);
             InformClientWithPlayers(client);
             _players.AddPlayer(client, player);
+
+            var invenotry = player.GetComponent<PlayerInventory>();
+
+            var items = _itemService.CreateItems();
+            invenotry.AddAll(items);
 
         }
 
